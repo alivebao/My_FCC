@@ -1,0 +1,103 @@
+﻿<html>
+<script src="script/GameDialog.js"></script>
+<script src="script/Plane.js"></script>
+<head>
+<title>打灰机</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<style>
+    @import "css/style.css"
+</style>
+</head>
+<body>
+<audio id ="bombPlayer" src="sound/bomb.mp3" autostart=false></audio>
+<audio id ="errorPlayer" src="sound/error.mp3" autostart=false></audio>
+<audio id ="backPlayer" src="sound/back.mp3" autoplay="autoplay" loop></audio>
+<div id="record">
+    <div id="scoreRecorder">score:0</div>
+    <div id="levelRecorder">level:0</div>
+</div>
+<div id="bloods">
+    <img id="blood1" src="pic/blood.png"/>
+    <img id="blood2" src="pic/blood.png"/>
+    <img id="blood3" src="pic/blood.png"/>
+</div>
+
+<div id="Introduction">
+游戏开始后</br>
+点击屏幕中的灰机即可</br>
+药瓶可以加血</br>
+玩的开心
+</div>
+<div id="menu">
+    <button id="beginGame">开始游戏</button>
+</div>
+<script>
+var planeGame = {};
+
+function init(){
+    planeGame.planeClassName = "classPlane";
+
+    planeGame.bombControl = document.getElementById("bombPlayer");
+    planeGame.errorControl = document.getElementById("errorPlayer");
+    planeGame.backControl = document.getElementById("backPlayer");
+    planeGame.scoreRecorder = document.getElementById("scoreRecorder");
+    planeGame.levelRecorder = document.getElementById("levelRecorder");
+
+    planeGame.bodySize = {};
+    planeGame.bodySize.width = document.body.clientWidth;
+    planeGame.bodySize.height = document.body.clientHeight;
+
+    planeGame.planeArr = {};
+    planeGame.bloodArr = {};
+    planeGame.planeType = ["blue","green","orange","grey","grey","pill"];
+
+    planeGame.gameLevel = 1;
+    planeGame.gameScore = 0;
+    planeGame.totalNum = 50;
+    planeGame.planeWidthParam = 5;
+    planeGame.LevelUpInterval = 10;
+    planeGame.currentBloods = 3;
+    planeGame.intervalId = -1;
+    
+    planeGame.backControl.volume = 0.1;
+    planeGame.bombControl.volume = 0.5;
+    planeGame.errorControl.volume = 0.5;
+
+    planeGame.stopGame = function(){
+        clearInterval(planeGame.intervalId);
+        for(var i = 0 ; i < planeGame.totalNum ; ++i){
+            planeGame.planeArr[i].stopfly();
+        }
+    }
+    document.getElementById("beginGame").addEventListener("click", function(){    
+        var orignCreateInterval = 500;
+        
+        planeGame.scoreRecorder.style.visibility = "visible";
+        planeGame.levelRecorder.style.visibility = "visible";
+        
+        document.getElementById("bloods").style.visibility = "visible";    
+        document.getElementById("beginGame").style.visibility = "hidden";
+        document.getElementById("Introduction").style.visibility = "hidden";
+       
+        planeGame.intervalId = setInterval(function(){
+            var r = Math.floor(Math.random() * planeGame.totalNum);
+            if(planeGame.planeArr[r].descripType == "pill" && planeGame.currentBloods == 3)
+                return;
+            if(planeGame.planeArr[r].running != true)
+                planeGame.planeArr[r].fly();
+        },orignCreateInterval / planeGame.gameLevel);  
+    });
+}
+window.onload = function(){ 
+    init();
+    for(var i = 0 ; i < planeGame.totalNum ; ++i){
+        planeGame.planeArr[i] = new Plane(planeGame.planeType[Math.floor(Math.random() * planeGame.planeType.length)], planeGame);
+        document.body.appendChild(planeGame.planeArr[i].element);
+    }    
+    for(var i = 1 ; i <= planeGame.currentBloods ; ++i){
+        planeGame.bloodArr[i] = document.getElementById("blood"+i);
+    }   
+}
+</script>
+</body>
+</html>
