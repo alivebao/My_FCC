@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>5.2.9-Merge Methods</title>
+</head>
+<body>
+<div>
+reduce(test_function), execute test_function to array from first to last element, return result
+</div>
+<pre>
+Test Code:
+var arr = [1,2,3,4,5];
+var sum = arr.reduce(function(prev, cur, index, array){
+    return prev + cur;
+});
+console.log("sum:" + sum);
+</pre>
+<script>
+var arr = [1,2,3,4,5];
+var sum = arr.reduce(function(prev, cur, index, array){
+    return prev + cur;
+});
+console.log("sum:" + sum);
+</script>
+</body>
+</html>

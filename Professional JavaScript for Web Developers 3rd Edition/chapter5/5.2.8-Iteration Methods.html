@@ -1,0 +1,74 @@
+<html>
+<head>
+<title>5.2.8-Iteration Methods</title>
+</head>
+<body>
+<div>
+All below methods will NOT change the value of input array<br/>
+1. every(test_function), used to check if each element in array return true in test_function<br />
+2. filter(test_function), used to filter elements in arr, <br/>
+just return the elements that return true in test_function  <br/>
+3. forEach(test_function), run test_function for each element in array,<br/>
+no return value<br/>
+4. map(test_function), call test_function to each elemnt in array,<br/>
+return an array consist of result aftern elements execute according to test_function
+<br/>
+5. some(test_function), return true if any element in arr meet the condition of test_function
+</div>
+<pre>
+Test Code:
+//Ex1
+var arr1 = [1, 2, 3, 4, 5, 6];
+var everyResult = arr1.every(function(item, index, arr){
+    return (item % 2 == 0);
+});
+console.log("every:"+everyResult);
+//Ex2
+var filterResult = arr1.filter(function(item, index, arr){
+    return (item % 2 == 0);
+});
+console.log("filter:"+filterResult);
+//Ex3
+arr1.forEach(function(item, index, arr){
+    console.log("forEach:"+item);
+});
+//Ex4
+var mapResult = arr1.map(function(item, index, arr){
+    return item * 10;
+});
+console.log("map:"+mapResult);
+//Ex5
+var someResult = arr1.some(function(item, index, arr){
+    return (item % 2 == 0);
+});
+console.log("some:"+someResult);
+</pre>
+<script>
+//Ex1
+var arr1 = [1, 2, 3, 4, 5, 6];
+var everyResult = arr1.every(function(item, index, arr){
+    return (item % 2 == 0);
+});
+console.log("every:"+everyResult);
+//Ex2
+var filterResult = arr1.filter(function(item, index, arr){
+    return (item % 2 == 0);
+});
+console.log("filter:"+filterResult);
+//Ex3
+arr1.forEach(function(item, index, arr){
+    console.log("forEach:"+item);
+});
+//Ex4
+var mapResult = arr1.map(function(item, index, arr){
+    return item * 10;
+});
+console.log("map:"+mapResult);
+//Ex5
+var someResult = arr1.some(function(item, index, arr){
+    return (item % 2 == 0);
+});
+console.log("some:"+someResult);
+</script>
+</body>
+</html>
