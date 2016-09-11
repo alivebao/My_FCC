@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>5.5.5-Attributes and Methods of Function</title>
+</head>
+<body>
+<ol>
+    <li>length: return the count of arguments function excepted. </li>
+    <li>apply() and call(): set the "this"</li>
+        <ul>
+            <li>apply(): except two para, scope and an array(used to set the param of caller)</li>
+            <li>call(): except multiple para, scope and other(used to set the param of caller)</li>
+        </ul>
+    <li>bind(): create a instance of Function, and it's "this" binded to the param called by caller</li>
+</ol>
+<pre>
+Test code:
+//Ex1
+function sayName(name){
+    console.log(name);
+}
+console.log(sayName.length);
+//Ex2
+window.color = "red";
+var o = {color: "green"};
+function sayColor(var1, var2){
+    console.log(this.color);
+    console.log("var1:" + var1);
+    console.log("var2:" + var2);
+}
+sayColor.apply(this,["ha", "var2"]);
+sayColor.call(o, "ha", "var2");
+//Ex3
+var oSayColor = sayColor.bind(o);
+oSayColor();
+</pre>
+<script>
+//Ex1
+function sayName(name){
+    console.log(name);
+}
+console.log(sayName.length);
+//Ex2
+window.color = "red";
+var o = {color: "green"};
+function sayColor(var1, var2){
+    console.log(this.color);
+    console.log("var1:" + var1);
+    console.log("var2:" + var2);
+}
+sayColor.apply(this,["ha", "var2"]);
+sayColor.call(o, "ha", "var2");
+//Ex3
+var oSayColor = sayColor.bind(o);
+oSayColor();
+</script>
+</body>
+</html>
