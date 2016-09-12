@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>6.2.1-Factory Mode</title>
+</head>
+<body>
+<div>
+Can't recongize the type of object
+</div>
+<pre>
+Test Code:
+function createPerson(name, age, job){
+    var o = new Object();
+    o.name = name;
+    o.age = age;
+    o.job = job;
+    o.sayName = function(){
+        return this.name;
+    };
+    return o;
+}
+var person1 = createPerson("Jack", 25, "Engineer");
+</pre>
+<script>
+function createPerson(name, age, job){
+    var o = new Object();
+    o.name = name;
+    o.age = age;
+    o.job = job;
+    o.sayName = function(){
+        return this.name;
+    };
+    return o;
+}
+var person1 = createPerson("Jack", 25, "Engineer");
+</script>
+</body>
+</html>

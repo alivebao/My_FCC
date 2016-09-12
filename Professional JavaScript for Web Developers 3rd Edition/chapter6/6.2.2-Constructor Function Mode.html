@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>6.2.2-Constructor Function Mode</title>
+</head>
+<body>
+<div>
+Different intance of objects' function is different in this mode,<br />
+create multiple functions in intances to deal with the same task is unnecessary.
+</div>
+<pre>
+Test Code:
+function Person(name, age, job){
+    this.name = name;
+    this.age = age;
+    this.job = job;
+    this.sayName = function(){
+        return this.name;
+    };
+}
+var person1 = new Person("Jack", 25, "Engineer");
+var person2 = new Person("Jack", 25, "Engineer");
+console.log(person1.constructor == Person); //true;
+console.log(person1 instanceof Person); //true
+console.log(person1 instanceof Object); //true
+console.log(person1.sayName == person2.sayName); //false
+</pre>
+<script>
+function Person(name, age, job){
+    this.name = name;
+    this.age = age;
+    this.job = job;
+    this.sayName = function(){
+        return this.name;
+    };
+}
+var person1 = new Person("Jack", 25, "Engineer");
+var person2 = new Person("Jack", 25, "Engineer");
+console.log(person1.constructor == Person); //true;
+console.log(person1 instanceof Person); //true
+console.log(person1 instanceof Object); //true
+console.log(person1.sayName == person2.sayName); //false
+</script>
+</body>
+</html>

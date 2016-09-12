@@ -1,0 +1,76 @@
+<html>
+<head>
+<title>6.2.3-Prototype Mode</title>
+</head>
+<body>
+<div>
+</div>
+<pre>
+Test code:
+function Person(){
+}
+Person.prototype.name = "Jack";
+Person.prototype.age = 25;
+Person.prototype.job = "Engineer";
+
+Person.prototype.sayName = function(){
+    console.log(this.name);
+}
+
+var person1 = new Person();
+var person2 = new Person();
+
+person1.sayName();
+person2.sayName();
+
+console.log(person1.sayName == person2.sayName);
+
+person1.name = "anotherName";
+person1.sayName();
+person2.sayName();
+
+delete person1.name;
+person1.sayName();
+//objcet.keys() return all enumable instance attribute
+var keys = Object.keys(Person.prototype);
+console.log(keys);
+person1.name = "f";
+person1.age = 42;
+keys = Object.keys(person1);
+console.log(keys);
+</pre>
+<script>
+function Person(){
+}
+Person.prototype.name = "Jack";
+Person.prototype.age = 25;
+Person.prototype.job = "Engineer";
+
+Person.prototype.sayName = function(){
+    console.log(this.name);
+}
+
+var person1 = new Person();
+var person2 = new Person();
+
+person1.sayName();
+person2.sayName();
+
+console.log(person1.sayName == person2.sayName);
+
+person1.name = "anotherName";
+person1.sayName();
+person2.sayName();
+
+delete person1.name;
+person1.sayName();
+//objcet.keys() return all enumable instance attribute
+var keys = Object.keys(Person.prototype);
+console.log(keys);
+person1.name = "f";
+person1.age = 42;
+keys = Object.keys(person1);
+console.log(keys);
+</script>
+</body>
+</html>
