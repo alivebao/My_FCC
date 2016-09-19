@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>7.1-Recursion</title>
+</head>
+<body>
+<p>3 methods to implement recursion</p>
+<ul>
+    <li>method1 is dangerous at this situation:
+    <pre>
+    function factorial1(num){
+    if(num <= 1)
+        return 1;
+    else
+        return num * factorial1(num - 1);
+    }
+    var anotherFunction = factorial1;
+    factorial1 = 0;
+    anotherFunction(10); //return 0;
+    </pre>
+    </li>
+    <li>method2 can't work at strict mode</li>
+    <li>method3 is the best way to implement recursion</li>
+</ul>
+<pre>
+//method1
+function factorial1(num){
+    if(num <= 1)
+        return 1;
+    else
+        return num * factorial1(num - 1);
+}
+//method2, can't work at strict mode
+function factorial2(num){
+    if(num <= 1)
+        return 1;
+    else
+        return num * arguments.callee(num - 1);
+}
+//best way to implement recursion
+var factorial = function(f(num){
+    if(num == 1)
+        return 1;
+    return num * f(num - 1);
+    }
+);
+</pre>
+<script>
+//method1
+function factorial1(num){
+    if(num <= 1)
+        return 1;
+    else
+        return num * factorial1(num - 1);
+}
+//method2
+function factorial2(num){
+    if(num <= 1)
+        return 1;
+    else
+        return num * arguments.callee(num - 1);
+}
+//method3
+var factorial = function(f(num){
+    if(num == 1)
+        return 1;
+    return num * f(num - 1);
+    }
+);
+</script>
+</body>
+</html>

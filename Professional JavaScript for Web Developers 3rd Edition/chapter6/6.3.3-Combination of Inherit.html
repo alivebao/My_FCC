@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>6.3.3-Combination of Inherit</title>
+</head>
+<body>
+<p>
+通过原型链进行继承的方式能够有效实现函数复用，然而其存在两方面不足：<br />
+<ul>
+    <li>诸如数组等引用类型，单纯使用原型链进行继承会造成其在子类中共享，与预期不符</li>
+    <li>无法在继承时为父类传参</li>
+</ul>
+</p>
+<p>
+通过借用构造函数进行继承的方式避免了原型链中存在的问题，但无法实现函数复用。
+</p>
+<p>
+组合继承的方式综合了原型链和借用构造函数的继承优点。
+<ul>
+    <li>使用原型链实现了对原型属性和方法的继承</li>
+    <li>使用借用构造函数实现了对实例属性的继承</li>
+</ul>
+</p>
+<pre>
+Test code:
+function SuperType(name){
+    this.name = name;
+    this.testArr = ["a", "b", "c"];    
+}
+SuperType.prototype.sayName = function(){
+    console.log(this.name);
+}
+SuperType.prototype.sayArr = function(){
+    console.log(this.testArr);
+}
+function SubType(name, age){
+    SuperType.call(this, name);
+    this.age = age;
+}
+SubType.prototype = new SuperType();
+SubType.prototype.constructor = SubType;
+SubType.prototype.sayAge = function(){
+    console.log(this.age);
+}
+var instance1 = new SubType("Mike", 25);
+instance1.sayName();
+instance1.sayAge();
+instance1.testArr.push("g");
+instance1.sayArr();
+var instance2 = new SubType("Jack", 22);
+instance2.sayName();
+instance2.sayAge();
+instance2.sayArr();
+</pre>
+<script>
+function SuperType(name){
+    this.name = name;
+    this.testArr = ["a", "b", "c"];    
+}
+SuperType.prototype.sayName = function(){
+    console.log(this.name);
+}
+SuperType.prototype.sayArr = function(){
+    console.log(this.testArr);
+}
+function SubType(name, age){
+    SuperType.call(this, name);
+    this.age = age;
+}
+SubType.prototype = new SuperType();
+SubType.prototype.constructor = SubType;
+SubType.prototype.sayAge = function(){
+    console.log(this.age);
+}
+var instance1 = new SubType("Mike", 25);
+instance1.sayName();
+instance1.sayAge();
+instance1.testArr.push("g");
+instance1.sayArr();
+var instance2 = new SubType("Jack", 22);
+instance2.sayName();
+instance2.sayAge();
+instance2.sayArr();
+</script>
+</body>
+</html>
