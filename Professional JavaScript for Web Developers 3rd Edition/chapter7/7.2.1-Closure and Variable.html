@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>7.2.1-Closure and Variable</title>
+</head>
+<body>
+<p>Different between createFunctions1 and createFunctions2</p>
+<p>Both createFunctions1 and createFunctions2 return a functions array, but:</p>
+<ul>
+    <li>In createFunctions1, allcreateFunctions1()[t] return 10(0 <= t <= 9); That's because all function in array "result" return "i" in createFunctions1, they share only one "i". "i" equal 10 after execute "for" in createFunctions1.</li>
+    <li>In createFunctions2, each createFunctions1()[t] return t;(0 <= t <= 9); That's because each function in array "result" return "num" in an anonymous function. In 
+    <pre>
+    "function(num){
+        return function(){
+            return num;
+        };
+    }(i);"</pre>function(num){...}(i) means execute this function immediately, so result[t] equals a function returned by function(num){..}(i), and "num" is different in each function(num), their value assigned by i.</li>
+</ul>
+<pre>
+Test code:
+function createFunctions1(){
+    var result = new Array();
+    for(var i = 0 ; i < 10 ; ++i){
+        result[i] = function(){
+            return i;
+        }
+    }
+    return result;
+}
+function createFunctions2(){
+    var result = new Array();
+    for(var i = 0 ; i < 10 ; ++i){
+        result[i] = function(num){
+            return function(){
+                return num;
+            };
+        }(i);
+    }
+    return result;
+}
+console.log(createFunctions1()[5]);
+console.log(createFunctions2()[5]);
+console.log(createFunctions1()[5]());
+console.log(createFunctions2()[5]());
+</pre>
+<script>
+function createFunctions1(){
+    var result = new Array();
+    for(var i = 0 ; i < 10 ; ++i){
+        result[i] = function(){
+            return i;
+        }
+    }
+    return result;
+}
+function createFunctions2(){
+    var result = new Array();
+    for(var i = 0 ; i < 10 ; ++i){
+        result[i] = function(num){
+            return function(){
+                return num;
+            };
+        }(i);
+    }
+    return result;
+}
+console.log(createFunctions1()[5]);
+console.log(createFunctions2()[5]);
+console.log(createFunctions1()[5]());
+console.log(createFunctions2()[5]());
+</script>
+</body>
+</html>
