@@ -1,0 +1,66 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>8.1.6-Interval and Timetout</title>
+</head>
+<body>
+<p>Different between setTimeout and setInterval</p>
+<ul>
+    <li>
+    "setTimeout(func, milseconds)" means call func after some time, param "func" can be a function or a statement(not recommond, it may result in performance loss).
+    </li>
+    <li>
+    "setInterval(func, milseconds)" call func every milseconds, param is just like in setTimeout.
+    </li>
+</ul>
+<p>Both setTimeout and setInterval return a Id, we can cancel setTimeout/setInterval by call clearTimeout(Id)/clearInterval(Id)</p>
+<pre>
+test code:
+console.log("log 'hello' in 1000 milseconds");
+setTimeout(function(){console.log('hello')}, 1000);
+console.log*("print i 5 times")
+var i = 0;
+var intervalId;
+function printI(){
+    console.log("i = " + i++);
+    if(i == 5)
+        clearInterval(intervalId);
+}
+intervalId = setInterval(printI, 1000);
+//in last ex., we cancel want to print i 5 times, then we set a intervalId,
+//clearInterval when i == 5. Here is a better way to implement:
+var j = 0;
+function printJ(){
+    if(j < 5){
+        console.log("j = " + j++);
+        setTimeout(printJ, 1000);
+    }
+}
+setTimeout(printJ, 1000);
+</pre>
+<script>
+console.log("log 'hello' in 1000 milseconds");
+setTimeout(function(){console.log('hello')}, 1000);
+console.log*("print i 5 times")
+var i = 0;
+var intervalId;
+function printI(){
+    console.log("i = " + i++);
+    if(i == 5)
+        clearInterval(intervalId);
+}
+intervalId = setInterval(printI, 1000);
+//in last ex., we cancel want to print i 5 times, then we set a intervalId,
+//clearInterval when i == 5. Here is a better way to implement:
+var j = 0;
+function printJ(){
+
+    if(j < 5){
+        console.log("j = " + j++);
+        setTimeout(printJ, 1000);
+    }
+}
+setTimeout(printJ, 1000);
+</script>
+</body>
+</html>
