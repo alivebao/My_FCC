@@ -1,0 +1,44 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>10.1.2-Document type</title>
+</head>
+<body>
+<ol>
+    <li>ChildNodes of document</li>
+    It's strange that <pre>document.documentElement == document.firstChlid</pre> print <strong><em style="color:red;">false</em></strong>
+    <li>Document information</li>
+    document.title/document.URL
+    <li>search elements</li>
+    getElement(s)ByXXX
+    <li>document write</li>
+    write()/writeln()   //overwrite content of document
+    open()/close()      //open/close output stream of html
+</ol>
+<div id="writeTest"></div>
+<pre>
+test code:
+console.log(document.documentElement);
+console.log(document.childNodes[0])
+console.log(document.firstChild)
+console.log(document.documentElement == document.childNodes[0]);    //"true"
+console.log(document.documentElement == document.firstChlid);       //"false"
+console.log(document.firstChild == document.childNodes[0])          //"true"
+
+console.log(document.title);
+console.log(document.URL)
+</pre>
+<script>
+console.log(document.documentElement);
+console.log(document.childNodes[0])
+console.log(document.firstChild)
+console.log(document.documentElement == document.childNodes[0]);    //"true"
+console.log(document.documentElement == document.firstChlid);       //"false"
+console.log(document.firstChild == document.childNodes[0])          //"true"
+
+console.log(document.title);
+console.log(document.URL)
+
+</script>
+</body>
+</html>
