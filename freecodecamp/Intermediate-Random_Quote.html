@@ -1,0 +1,131 @@
+<script src="https://use.fontawesome.com/5426ed769d.js"></script>
+<script src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
+<style>
+.circle-border{
+    border-radius: 2%;
+}
+.quote{
+    width: 40%;
+    margin: auto;
+    margin-top: 10%;
+    padding: 40px;
+    top: 20%;
+    background-color: white;
+    min-width: 300px;
+}
+.quote-content{
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.75em;
+}
+.quote-writer{
+    text-align: right;
+    font-size: 1em;
+}
+.quote-writer a{
+    text-decoration: none;
+}
+.footer{
+    padding-top: 20px;
+}
+.footer button{
+    color: white;
+    height: 40px;
+    border: none;
+}
+.shareTwitter{
+    float: left;
+    width: 40px;
+}
+.changeQuote{
+    float: right;
+}
+.copyright{
+    padding-top: 20px;
+    color: white;
+    text-align: center;
+}
+.personalLink{
+    text-decoration: none;
+    color: white;
+}
+.footer button:hover{
+    cursor: pointer;
+}
+</style>
+<script>
+var colors = [
+    '#16a085',
+    '#27ae60',
+    '#2c3e50',
+    '#f39c12',
+    '#e74c3c',
+    '#9b59b6',
+    '#FB6964',
+    '#342224',
+    '#472E32',
+    '#BDBB99',
+    '#77B1A9',
+    '#73A857'
+];
+var iColor = -1;
+var iCity = -1;
+var preUrl = 'https://op.juhe.cn/onebox/weather/query?cityname=';
+var citys = ['北京','上海','广州','深圳','天津','重庆','杭州'];
+var endUrl = '&dtype=&key=88808002854e14ed85bdcb7bc8d0d6c4';
+var changeColor = function(){
+    var randColor = colors[++iColor % colors.length];
+    $('body').css("background-color", randColor);
+    $('.footer button').css("background-color", randColor);
+    $('.quote-content').css("color", randColor);
+    $('.quote-writer').css("color", randColor);
+    $('.quote-writer a').css("color", randColor);
+}
+$().ready(function(){
+    $('.changeQuote').click(function(){
+        changeColor();
+        var tempWeatherDataUrl = preUrl + citys[++iCity % citys.length] + endUrl;
+        $.ajax({
+        url: tempWeatherDataUrl,
+        dataType: 'jsonp',
+        success: function(data){
+            var date = data.result.data.realtime.date
+            var time = data.result.data.realtime.time;
+            var city_name = data.result.data.realtime.city_name;
+            var temperature = data.result.data.realtime.weather.temperature + 'C';
+            var weather = data.result.data.realtime.weather.info;
+            $('#weather-info')[0].innerText = date + ' ' + time + '\n' + ' ' + city_name + ',' + temperature + ',' + weather;
+        },
+        error: function(xhr, error){
+            $('#weather-info').text('get weather info failed');
+        }
+        });
+        
+    });
+    $('.shareTwitter').click(function(){
+        var aimLink = 'https://twitter.com/intent/tweet?text=' + $('.quote-content').text().trim();
+        window.open(aimLink);
+    });
+    $('.changeQuote').click();
+});
+  
+</script>
+<meta charset="UTF-8">
+<body>
+    <div class="quote circle-border">
+        <p class="quote-content">
+            <i class="fa fa-quote-left"> </i>
+            <span id="weather-info">Getting data from BackEnd...</span>
+            <i class="fa fa-quote-right"> </i>
+        </p>
+        <p class="quote-writer">
+            - Data from <a href="https://www.juhe.cn/">Juhe</a>
+        </p>
+        <div class="footer">
+            <button class="shareTwitter circle-border"><i class="fa fa-twitter"></i></button>
+            <button class="changeQuote circle-border">New Weather</button>
+            <div style="clear:both;"></div>
+        </div>        
+    </div>
+    <p class="copyright"><a class="personalLink" href="http://codepen.io/19920612/">by Yunze Miao</a></p>
+</body>

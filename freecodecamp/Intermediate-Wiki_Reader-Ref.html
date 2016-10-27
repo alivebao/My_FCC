@@ -1,0 +1,388 @@
+<body>
+    <main ng-app="WikiApp" ng-controller="MainCtrl">
+        <div id="search" class="wrapper fullHeight">
+            <a href="https://en.wikipedia.org/wiki/Special:Random" target="_blank" class="white-text">Click here for a random article</a>
+            <br/>
+            <form ng-submit="search()">
+                <input type="text" ng-model="searchTxt"/>
+                <div class="eks"></div>
+            </form>
+            <p id="help" class="white-text">Click icon to search</p>
+        </div>
+        <div class="wrapper">
+        <ul>
+            <a ng-href="{{result.page}}" target="_blank" ng-repeat="result in results">
+            <li><h1>{{result.title}}</h1><p>{{result.body}}</p></li>
+            </a>
+        </ul>
+        </div>
+    </main>
+</body>
+<style>
+/* latin */
+@font-face {
+  font-family: 'Rokkitt';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Rokkitt Bold'), local('Rokkitt-Bold'), url(https://fonts.gstatic.com/s/rokkitt/v10/Mef17w3J4CtS0lw4Wa_8r_k_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+* {
+  box-sizing: border-box;
+}
+
+html, body, main {
+  font-family: "Lucida Grande","Lucida Sans Unicode", Tahoma, Sans-Serif;
+  position: relatiave;
+  margin: 0;
+  padding: 0;
+  padding-top: 10px;
+  width: 100%;
+  height: 100%;
+  background-color: #092B40;
+}
+
+input[type='text'] {
+  -webkit-appearance: none;
+  outline: none;
+  border: none;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  box-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  -o-align-items: center;
+  align-items: center;
+  -ms-flex-align: center;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  box-pack: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  -o-justify-content: center;
+  justify-content: center;
+  -ms-flex-pack: center;
+  -webkit-transition: all 2s linear;
+  -moz-transition: all 2s linear;
+  transition: all 2s linear;
+}
+
+.fullHeight {
+  height: 100%;
+  -webkit-transition-duration: 2s;
+  -moz-transition-duration: 2s;
+  transition-duration: 2s;
+}
+
+.white-text {
+  color: white;
+  text-decoration: none;
+}
+
+form {
+  position: relative;
+  display: block;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  margin-left: 0;
+  padding: 0;
+  margin-bottom: 10px;
+  border: 4px solid #D96F32;
+  border-radius: 20px;
+  -webkit-transition: all 0.25s ease 0.3s;
+  -moz-transition: all 0.25s ease 0.3s;
+  transition: all 0.25s ease 0.3s;
+  cursor: pointer;
+}
+form:before {
+  top: 90%;
+  left: 90%;
+  width: 16px;
+  height: 3px;
+  background-color: #D96F32;
+  border-radius: 1px;
+  -webkit-transition: width 0.15s ease 0.55s;
+  -moz-transition: width 0.15s ease 0.55s;
+  transition: width 0.15s ease 0.55s;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: top left;
+  -moz-transform-origin: top left;
+  -ms-transform-origin: top left;
+  -o-transform-origin: top left;
+  transform-origin: top left;
+}
+form input {
+  width: 100%;
+  height: 100%;
+  padding: 0 30px 0 15px;
+  font-size: 14px;
+  line-height: 38px;
+  opacity: 0;
+  background-color: transparent;
+  color: white;
+  -webkit-transition: opacity 0.15s ease;
+  -moz-transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease;
+}
+
+.eks {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 20;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.eks:before, .eks:after {
+  right: 5px;
+  height: 2px;
+  width: 2px;
+  border-radius: 1px;
+  -webkit-transition: all 0.25s ease;
+  -moz-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+.eks:before {
+  top: 0px;
+  background-color: #D96F32;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  -webkit-transform-origin: top right;
+  -moz-transform-origin: top right;
+  -ms-transform-origin: top right;
+  -o-transform-origin: top right;
+  transform-origin: top right;
+  -webkit-transition-delay: 0.1s;
+  -moz-transition-delay: 0.1s;
+  transition-delay: 0.1s;
+}
+.eks:after {
+  bottom: 0px;
+  background-color: #D96F32;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: bottom right;
+  -moz-transform-origin: bottom right;
+  -ms-transform-origin: bottom right;
+  -o-transform-origin: bottom right;
+  transform-origin: bottom right;
+  -webkit-transition-delay: 0s;
+  -moz-transition-delay: 0s;
+  transition-delay: 0s;
+}
+
+form.open {
+  width: 260px;
+  -webkit-transition-delay: 0.1s;
+  -moz-transition-delay: 0.1s;
+  transition-delay: 0.1s;
+}
+form.open:before {
+  width: 0px;
+  -webkit-transition-delay: 0s;
+  -moz-transition-delay: 0s;
+  transition-delay: 0s;
+}
+form.open input {
+  opacity: 1;
+  -webkit-transition-delay: 0.15s;
+  -moz-transition-delay: 0.15s;
+  transition-delay: 0.15s;
+}
+form.open .eks:before, form.open .eks:after {
+  width: 15px;
+  right: 12px;
+}
+form.open .eks:before {
+  top: 9px;
+  -webkit-transition-delay: 0.25s;
+  -moz-transition-delay: 0.25s;
+  transition-delay: 0.25s;
+}
+form.open .eks:after {
+  bottom: 9px;
+  -webkit-transition-delay: 0.3s;
+  -moz-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+  width: 80%;
+}
+ul a {
+  text-decoration: none;
+  color: black;
+}
+ul a h1 {
+  font-size: 18px;
+}
+ul a p {
+  font-size: 14px;
+}
+ul li {
+  list-style-type: none;
+  display: block;
+  margin-bottom: 10px;
+  padding: 15px 30px 5px 30px;
+  background-color: #E7E7E8;
+  opacity: 0;
+  -webkit-animation: new-item 1s ease-in-out forwards;
+  -moz-animation: new-item 1s ease-in-out forwards;
+  animation: new-item 1s ease-in-out forwards;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0, 0.4, 1);
+  -moz-transition-timing-function: cubic-bezier(0.6, 0, 0.4, 1);
+  transition-timing-function: cubic-bezier(0.6, 0, 0.4, 1);
+}
+ul li:hover {
+  border-left: 5px solid #D96F32;
+  margin-left: -5px;
+}
+
+.hide {
+  display: none;
+}
+
+form:before, .eks:before, .eks:after {
+  content: '';
+  position: absolute;
+  display: block;
+}
+
+@-webkit-keyframes new-item {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(2000px);
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+@-moz-keyframes new-item {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(2000px);
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+@keyframes new-item {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(2000px);
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+
+</style>
+<script src="script/angular-1.3.2.min.js"></script>
+<script src="script/jquery-2.1.3.min.js"></script>
+<script src="script/angular-animate-1.3.2.min.js"></script>
+<script>
+var app = angular.module('WikiApp', ['ngAnimate']);
+app.controller('MainCtrl', function($scope, $http, $timeout) {
+  var form = $('form');
+  var close = $('.eks');
+  var input = $('input');
+  var search = $("#search");
+  var help = $("#help");
+  
+  $scope.results = [];
+
+  close.on('click', function() {
+    form.toggleClass('open');
+    
+    if (!form.hasClass('open') && $scope.searchTxt !== '' && typeof $scope.searchTxt !== 'undefined') {
+	    search.toggleClass('fullHeight')
+      help.toggleClass('hide');
+      $scope.searchTxt = '';
+    } 
+    $scope.results = [];
+    $scope.$apply();
+  })
+
+  input.on('transitionend webkitTransitionEnd oTransitionEnd', function() {
+    if (form.hasClass('open')) {
+      input.focus();
+    } else {
+      return;
+    }
+  })
+
+  $scope.search = function() {
+    $scope.results = [];
+    help.addClass('hide');
+    search.removeClass('fullHeight');
+    var title = input.val();
+    var api = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=';
+    var cb = '&callback=JSON_CALLBACK';
+    var page = 'https://en.wikipedia.org/?curid=';
+    
+    $http.jsonp(api + title + cb)
+    .success(function(data) {
+      var results = data.query.pages;
+      angular.forEach(results, function(v,k)  {
+        $scope.results.push({title: v.title, body: v.extract, page: page + v.pageid})
+      })
+    });
+  }
+});
+</script>

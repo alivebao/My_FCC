@@ -1,0 +1,143 @@
+<style>
+#custom-body{
+  font-size: 20px;  
+  background: #888;
+}
+.banner{
+  background-color: #722872;
+  height: 80px;
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  color: white;
+  padding: 0 50px;
+}
+.banner span{
+  line-height: 80px;
+}
+.banner div{
+  float: right;
+  padding-top: 10px;
+}
+.banner li{  
+  float: left;
+  padding: 10px;
+  list-style: none;
+}
+.banner li a{
+  color: #999;
+}
+#intro-text{
+  max-width: 600px;
+  float: left;
+}
+.container{
+  width: 80%;
+  border: solid 1px #555;
+  padding: 0px;
+}
+#head,
+#portfolio, 
+#contact{
+  color: #aaa;
+  background-color: white;
+  padding: 5% 10%;
+  margin: 0px;
+  border-bottom: 1px solid #ddd;
+}
+#head{
+  padding-top: 100px;
+  background-color: #aaa;
+  color: #fff;
+}
+#custom-img{  
+  max-width: 25%;
+  margin: auto;
+  border-radius: 50%;
+}
+.single-profilos{
+  width: 50%;
+  float: left;
+  text-align: center;
+}
+.single-profilos img{
+  margin: auto;
+  width: 80%;
+}
+hr.star-bright, hr.star-dark{
+  border-top:solid 5px;
+}
+.footer{
+  background-color: #222;
+  height: 80px;
+  color: white;
+  text-align: center;
+  line-height: 80px;
+}
+</style>
+<link rel="stylesheet" href="script/bootstrap-3.3.7.min.css">
+<script src="script/jquery-3.1.1.min.js"></script>
+<script src="script/bootstrap-3.3.7.min.js"></script>
+<body id="custom-body" data-spy="scroll" data-target=".navbar" data-offset="50">
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Yun Ze Miao</a>
+    </div>
+    <div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="#head">About</a></li>
+          <li><a href="#portfolio">Portofolio</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="head" class="text-center container-fluid">
+    <div id="intro-text">
+      <p class="text-center">ABOUT</p>
+    <hr class="star-bright">
+    <p>Front-End Developer, graduated from Ningbo University in 2016, enjoy programming and exploring unknown things, committed to being called a great programmer.</p>   
+    <hr class="star-bright">
+    <p>Web Developer, Fitness enthusiasts</p>
+    </div>
+    <a href="https://github.com/alivebao"><img id="custom-img" src="https://avatars2.githubusercontent.com/u/8373285?v=3&s=466" /></a>   
+    <div style="clear:both"></div>
+</div>
+<div id="portfolio" class="container-fluid">
+    <p class="text-center">PORTFOLIO</p>
+    <hr class="star-bright">
+    <div class="single-profilos">
+      <p>
+        <a href="https://github.com/alivebao/FreeSizeDraggableLayout">FSDLayout
+        </a> 
+      </p>
+      <img src="http://7xsv7c.com2.z0.glb.clouddn.com/freeseizedraggablelayout_demo_compress_0.2.gif" />    
+   </div>
+    
+    <div class="single-profilos">
+      <p>
+        <a href="https://github.com/alivebao/ZhihuDiaryLite">ZhihuDiaryLite
+        </a> 
+      </p>
+      <img src="https://github.com/alivebao/ZhihuDiaryLite/raw/master/docs/demo1.jpeg" />    
+   </div>
+    <div style="clear:both;"></div>
+  </div>
+<div id="contact" class="container-fluid">
+    <p class="text-center">CONTACT ME</p>
+    <hr class="star-bright">    
+    <p>My email is <strong><em><a href="mailto:miaoyunze@foxmail.com">miaoyunze@foxmail.com</a> </strong></em>, feel free to touch me if you have any question, and I will reply A.S.A.P.    
+  </div>
+<div class="footer">
+  YunZe Miao © 2016. All Rights Reversed
+</div>
+</body>

@@ -1,0 +1,210 @@
+<script src="script/angular-1.3.2.min.js"></script>
+<script src="script/jquery-2.1.3.min.js"></script>
+<script src="script/angular-animate-1.3.2.min.js"></script>
+<script src="script/angular-spinner.js"></script>
+<script src="script/spin.min.js"></script>
+<body>    
+    <main ng-app="WikiApp" ng-controller="MainCtrl">
+        <div id="spin-cover">
+            <span us-spinner="{radius:17, width: 8, length: 0, line: 9}" spinner-key="spinner-1"></span>
+        </div>
+        <div id="search" class="wrapper fullHeight">
+            <div><a href="https://en.wikipedia.org/wiki/Special:Random" target="_blank">Click here for a random article</a></div>
+            <form ng-submit="search()">
+                <input type="text" ng-model="searchTxt"/>
+                <div class="eks"></div>
+            </form>
+            <div id="reminder">Click icon to search</div>
+        </div>
+        <div id="wiki-result">
+            <ul>
+                <a ng-href="{{result.page}}" target="_blank" ng-repeat="result in results">
+                    <li><h1>{{result.title}}</h1><p>{{result.body}}</p></li>
+                </a>
+            </ul>
+        </div>
+    </main>
+</body>
+
+<style>
+*{
+  box-sizing: border-box;
+}
+body{
+    margin: 0px;
+    padding: 0px;
+    background-color: #092B40;
+}
+#spin-cover{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.62);
+    z-index: 111;
+}
+main{
+    height: 100%;
+}
+#search{
+    font-family: "Lucida Grande","Lucida Sans Unicode", Tahoma, Sans-Serif;
+    text-align: center;
+    color: white;
+    position: relative;
+    top: 40%;
+}
+#search a{
+    color: white;
+    text-decoration: none;
+}
+form{
+    width: 40px;
+    height: 40px;
+    border: 4px solid #D96F32;
+    border-radius: 20px;
+    z-index: 1;
+    cursor: pointer;
+    transition: all 0.25s linear 0.3s;
+    margin: 15px auto;
+}
+form:before {
+    content: '';
+    position: relative;
+    display: block;
+    width: 16px;
+    height: 3px;
+    background-color: #D96F32;
+    transition: width 0.15s ease 0.55s;
+    transform: rotate(45deg);
+    left: 25px;
+    top: 35px;
+}
+.eks{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: -33px;
+}
+input[type='text'] {
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+}
+form.open input {
+    opacity: 1;
+    transition-delay: 0.15s;
+    position: relative;
+    top: -3px;
+}
+input[type='text'] {
+    -webkit-appearance: none;
+    outline: none;
+    border: none;
+}
+form input{
+    width: 100%;
+    height: 100%;
+    padding: 0 30px 0 15px;
+    opacity: 0;
+    background-color: transparent;
+    color: white;
+}
+form.open{
+    width: 260px;
+}
+form.open:before{
+    width: 0px;
+    transition: width 0.15s ease 0s;
+}
+form.open .eks{
+    position: relative;
+    animation: moveToRight 0.25s linear 0.3s;
+    animation-fill-mode: forwards;
+}
+@keyframes moveToRight{
+    from{left: 0px;}
+    to{left: 220px;}
+}
+form.open .eks:before,
+form.open .eks:after{
+    content: '';
+    height: 2px;
+    width: 15px;
+    display: inline-block;
+    background-color: #D96F32;
+    margin-top: 12px;
+    position: relative;
+}
+form.open .eks:before{
+    transform: rotate(-45deg);
+    left: 9px;
+}
+form.open .eks:after{
+    transform: rotate(45deg);
+    right: 6px;
+}
+#wiki-result a{
+    color: black;
+    text-decoration: none;
+}
+#wiki-result ul{
+    list-style: none;
+    margin-top: 5%;
+}
+#wiki-result li{
+    background-color: white;
+    padding: 10px 20px;
+    margin: 15px 80px;
+}
+</style>
+<script>
+var app = angular.module('WikiApp', ['ngAnimate', 'angularSpinner']);
+app.controller('MainCtrl', ['$scope', 'usSpinnerService', '$http', '$timeout', function($scope, usSpinnerService, $http, $timeout) {
+    var form = $('form');
+    var close = $('.eks');
+    var input = $('input');
+    var search = $('#search');
+    
+    close.on('click', function() {
+        if(form.hasClass('open')){
+            form.removeClass('open');
+            $scope.results = [];
+            $('#reminder').show();
+            $('#search').css("top", "40%");
+            $scope.$apply();
+        }else{
+            form.addClass('open');
+            input.focus();
+        }
+    })
+    $scope.startSpin = function(){
+        $('#spin-cover').show();
+        usSpinnerService.spin("spinner-1");
+    };
+    $scope.stopSpin = function(){
+        $('#spin-cover').hide();
+        usSpinnerService.stop("spinner-1");
+    };
+    $scope.search = function(){
+        $scope.startSpin();
+        $scope.results = [];
+        var api = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=';
+        var cb = '&callback=JSON_CALLBACK';
+        var prePage = 'https://en.wikipedia.org/?curid=';
+        $http.jsonp(api + $scope.searchTxt + cb)
+        .success(function(data) {
+            $scope.stopSpin();
+            $('#reminder').hide();
+            $('#search').css("top", "5%");
+            var results = data.query.pages;
+            angular.forEach(results, function(v,k){
+                $scope.results.push({title: v.title, body: v.extract, page: prePage + v.pageid});
+            });
+        });
+    }
+    angular.element(document).ready(function(){
+        $('#spin-cover').hide();
+    });
+}]);
+</script>
