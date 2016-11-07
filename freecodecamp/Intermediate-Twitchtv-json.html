@@ -1,248 +1,160 @@
+<style>
+body{
+    background-color: #f79f94;
+}
+#all-content{
+    width: 30%;
+    margin: auto;
+}
+#user-menu{
+    background-color: #F47564;
+    text-align: center;
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    color: white;
+}
+#user-menu li{
+    display: inline-block;
+    padding: 20px 0px;
+    width: 31%;
+    cursor: pointer;
+}
+#user-menu li.open{
+    background-color: white;
+    color: #F47564;
+}
+#user-menu li:nth-child(2){
+    border-left: 1px solid #f79f94;
+    border-right: 1px solid #f79f94;
+}
+#content-details{
+    background-color: white;
+}
+#search-bar{
+    border-bottom: 1px solid #E4E0E1;
+    padding: 20px;
+    text-align: center;
+}
+#search-bar input{
+    width: 80%;
+    border-radius: 20px;
+    border: 1px solid #E4E0E1;
+    padding-left: 20px;
+    outline: none;
+}
+#search-result ul{
+    list-style-type: none;
+}
+#search-result li{
+    position: relative;
+    padding: 10px 0px;
+    height: 60px;
+}
+#search-result li a{
+    text-decoration: none;
+}
+#user-logo{
+    width: 60px;
+    border-radius: 50%;
+}
+#user-title{
+    display: inline-block;
+    position: relative;
+    top: -40%;
+    line-height: 60px;
+    color: #F47564;
+}
+</style>
+
 <body>
-    <main ng-app="TwitchApi">
-      <section ng-controller="MainCtrl">
-        <header>
-          <ul id="mainMenu">
-            <li data-display="allUsers" class="activeMenu">All</li>
-            <li data-display="onlineUsers">Online</li>
-            <li data-display="offlineUsers">Offline</li>
-          </ul>
-        </header>
-        <div id="searchMenu"><i id="searchIcon" class="fa fa-search"></i>
-          <input type="text" ng-model="searchText" id="searchBar"/>
+    <main ng-app="twitchApp" ng-controller="myController">
+        <div id="all-content">
+            <div id="header">
+                <ul id="user-menu">
+                    <li id="user-all">All</li>
+                    <li id="user-online">Online</li>
+                    <li id="user-offline">Offline</li>
+                </ul>
+            </div>
+            <div id="content-details">
+                <div id="search-bar">
+                    <input type="text" ng-model="searchTxt" />
+                </div>
+                <div id="search-result">
+                    <ul>
+                        <li ng-repeat="result in results | filter:searchTxt"">
+                            <a ng-href="{{result.twitchURL}}">
+                                <img id="user-logo" ng-src="{{result.imgSrc}}"></img>
+                                <span id="user-title">{{result.name}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <ul id="people"><a href="http://twitch.tv/{{user.username}}" target="_blank" ng-repeat="user in profile | filter:searchText">
-            <li><img ng-src="{{user.logo}}" err-src="http://placehold.it/50x50" class="pic"/><span class="name">{{user.name}}</span><span class="status"><i class="{{user.status}}"></i></span><span class="title">{{user.streamTitle}}</span></li></a></ul>
-      </section>
     </main>
 </body>
-<link href="script/font-awesome.min.css"/>
-<style>
-@import url(http://fonts.googleapis.com/css?family=Roboto:300);
-body {
-  background: #f79f94;
-}
-
-main {
-  margin: 0 auto;
-  width: 300px;
-  border: 1px solid #F47564;
-  background: white;
-}
-main header {
-  height: 50px;
-  background-color: #F47564;
-  position: relative;
-}
-main header ul {
-  margin-top: 0;
-  padding-left: 0;
-}
-main header li {
-  position: relative;
-  list-style-type: none;
-  display: inline-block;
-  font-family: Roboto, Arial, Sans-Serif;
-  color: white;
-  padding-left: 30px;
-  padding-top: 15px;
-  padding-bottom: 16px;
-  padding-right: 25px;
-  border-right: 1px solid #f79f94;
-}
-main header li:first-child {
-  padding-right: 35px;
-}
-main header li:last-child {
-  border-right: none;
-}
-main header li:hover {
-  cursor: pointer;
-}
-main header .activeMenu:after, main header .activeMenu:before {
-  top: 100%;
-  left: 50%;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-}
-main header .activeMenu:after {
-  border-top-color: #F47564;
-  border-width: 10px;
-  margin-left: -10px;
-  z-index: 10;
-}
-main #searchMenu {
-  text-align: center;
-  position: relative;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #E4E0E1;
-}
-main #searchMenu #searchBar {
-  position: relative;
-  width: 70%;
-  text-align: left;
-  line-height: 20px;
-  border-radius: 20px;
-  border: 1px solid #E4E0E1;
-  outline: none;
-  padding-left: 40px;
-  padding-right: 20px;
-  font-size: .8em;
-  font-family: Roboto, Arial, Sans-Serif;
-}
-main #searchMenu #searchIcon {
-  position: absolute;
-  z-index: 1;
-  padding-top: 3px;
-  left: 25px;
-  color: #E4E0E1;
-}
-main #people {
-  padding-left: 0;
-}
-main #people a {
-  text-decoration: none;
-}
-main #people li {
-  list-style-type: none;
-  display: block;
-  padding-left: 20px;
-  position: relative;
-  font-family: Roboto, Arial, Sans-Serif;
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-main #people li:nth-child(even) {
-  background-color: #f7f6f6;
-}
-main #people li .pic {
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-}
-main #people li .name, main #people li .status {
-  position: absolute;
-  line-height: 50px;
-}
-main #people li .name {
-  left: 80px;
-  color: #F47564;
-}
-main #people li .status {
-  right: 20px;
-}
-main #people li .title {
-  color: #b5a9ac;
-  font-size: .7em;
-}
-
-.green {
-  color: #8FD7D6;
-}
-
-.red {
-  color: #F47564;
-}
-
-</style>
 <script src="script/angular-1.3.2.min.js"></script>
 <script src="script/jquery-2.1.3.min.js"></script>
 <script>
-// Angular controller to get Twitch users
-var app = angular.module('TwitchApi', []);
-app.controller('MainCtrl', function($scope, $http) {
-  
-  // Scope variables
-	$scope.allUsers = [];
-  $scope.onlineUsers = [];
-  $scope.offlineUsers = [];
-  
-  // Local variables
-  var streamers = ["freecodecamp", "GeoffStorbeck", "terakilobyte", "habathcx","notmichaelmcdonald","RobotCaleb","medrybw","comster404","brunofin","thomasballinger","joe_at_underflow","noobs2ninjas","mdwasp","beohoff","xenocomagain"];
-  var cb = '?client_id=5j0r5b7qb7kro03fvka3o8kbq262wwm&callback=?';
-	var url = 'https://api.twitch.tv/kraken/';
-  
-  // Get information for streamers
-	streamers.forEach(function(stream) {
-    
-    // Temporary object
-    var obj = {};
-    
-    // Check if streaming
-		$.getJSON(url + 'streams/' + stream + cb).success(function(data) {
-      var streaming = (data.stream === null) ? false : true;
-      if (streaming) {
-        obj.status = 'green fa fa-check';
-        var streamTitle = data.stream.channel.status;
+var app = angular.module('twitchApp', []);
+app.controller('myController', function($scope, $http){
+    var api = "https://wind-bow.hyperdev.space/twitch-api";
+    var cb = '?callback=JSON_CALLBACK';
+    var streamers = ["freecodecamp", "GeoffStorbeck", "terakilobyte", "habathcx","notmichaelmcdonald","RobotCaleb","medrybw","comster404","brunofin","thomasballinger","joe_at_underflow","noobs2ninjas","mdwasp","beohoff","xenocomagain"];
+
+    $scope.allUserArr = [];
+    $scope.onlineUserArr = [];
+    $scope.offlineUserArr = [];
+    streamers.forEach(function(user){
+        $http.jsonp(api + '/channels/' + user + cb)
+        .success(function(userData){
+            if(userData.status != 404){
+                $scope.allUserArr.push({'name': userData.display_name, 'imgSrc': (userData.logo ? userData.logo : 'http://placehold.it/50x50'), 'twitchURL': userData.url});
+                
+                $http.jsonp(api + '/streams/' + user + cb)
+                .success(function(streamData){
+                    if(streamData.stream){
+                        $scope.onlineUserArr.push({'name': userData.display_name, 'imgSrc': (userData.logo ? userData.logo : 'http://placehold.it/50x50'), 'twitchURL': userData.url});
+                    }else{
+                        $scope.offlineUserArr.push({'name': userData.display_name, 'imgSrc': (userData.logo ? userData.logo : 'http://placehold.it/50x50'), 'twitchURL': userData.url});
+                    }
+                });                
+            }
+        })
         
-        if (streamTitle.length > 36) {
-          streamTitle = streamTitle.substring(0,33);
-          streamTitle += '...';
-        }
-        obj.streamTitle = streamTitle;
-      } else {
-        obj.status = 'red fa fa-exclamation';
-        data.streamTitle = '';
-      }
-      obj.username = stream;
-      
-      // Get user name and image
-      $.getJSON(url + 'users/' + stream + cb).success(function(data) {
-        obj.name = data.display_name;
-        obj.logo = data.logo;
-        
-        $scope.allUsers.push(obj);
-        if (streaming) {
-          $scope.onlineUsers.push(obj);
-        } else {
-          $scope.offlineUsers.push(obj);
-        }
-        $scope.profile = $scope.allUsers;
-        $scope.$apply();
-      });
     });
-  });
-  
-  // Change arrow on main menu
-  $('#mainMenu li').on('click', function() {
+
+    function updateUserList(selectedType){
+        $('#user-all').removeClass('open');
+        $('#user-online').removeClass('open');
+        $('#user-offline').removeClass('open');    
+        
+        $(selectedType).addClass('open');    
+    }
+    $('#user-all').click(function(){
+        updateUserList('#user-all');
+        console.log("D");
    
-    if ($(this).data('display') === 'allUsers') {
-      $scope.profile = $scope.allUsers;
-    } else if ($(this).data('display') === 'onlineUsers') {
-      $scope.profile = $scope.onlineUsers;
-    } else {
-      $scope.profile = $scope.offlineUsers;
-    }
-    $scope.$apply();
+        $scope.results = $scope.allUserArr;
+        $scope.$apply();
+    });
+    $('#user-online').click(function(){
+        updateUserList('#user-online');
+        
+        $scope.results = $scope.onlineUserArr;
+        $scope.$apply();
+    });
+    $('#user-offline').click(function(){
+        updateUserList('#user-offline');
+        
+        $scope.results = $scope.offlineUserArr;
+        $scope.$apply();
+    });
     
-    // Change arrow
-    $('#mainMenu li').removeClass('activeMenu');
-    $(this).addClass('activeMenu');
-    
-  })
-});
-
-app.directive('errSrc', function() {
-  return {
-    link: function(scope, element, attrs) {
-
-      scope.$watch(function() {
-          return attrs['ngSrc'];
-        }, function (value) {
-          if (!value) {
-            element.attr('src', attrs.errSrc);  
-          }
-      });
-
-      element.bind('error', function() {
-        element.attr('src', attrs.errSrc);
-      });
-    }
-  }
+    angular.element(document).ready(function(){
+        $('#user-all').click();
+    });
 });
 </script>
