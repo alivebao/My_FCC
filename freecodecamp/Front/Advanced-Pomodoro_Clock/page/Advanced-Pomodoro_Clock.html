@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../style/Pomodoro_Clock.css" >
+<body ng-app="myApp" ng-controller="myCtrl">
+    <h1>Pomodoro Clock</h1>
+    <div id="time-setter">
+        <div id="break-setter" class="setter">
+            <p>BREAK LENGTH</p>
+            <span class="sub" ng-click="changeBreakPeriod($event)" >-</span>
+            <span>{{breakPeriod}}</span>
+            <span class="add" ng-click="changeBreakPeriod($event)">+</span>            
+        </div>
+        
+        <div id="session-setter" class="setter">
+            <p>SESSION LENGTH</p>
+            <span class="sub" ng-click="changeSessionPeriod($event)">-</span>
+            <span>{{sessionPeriod}}</span>
+            <span class="add" ng-click="changeSessionPeriod($event)">+</span>            
+        </div>
+    </div>
+    
+    <div id="time-panel" ng-click="timerBegin()">
+        <p>{{currentPriod}}</p>
+        <p><span>{{remainTime.min}}</span><span>:{{remainTime.sec}}</span></p>
+        <div id="current-status"></div>
+    </div>
+    
+    <button ng-click="resetPomodoro()">Reset Pomodoro</button>
+</body>
+<script src="../script/angular-1.3.2.min.js"></script>
+<script src="../script/Pomodoro_Clock.js"></script>

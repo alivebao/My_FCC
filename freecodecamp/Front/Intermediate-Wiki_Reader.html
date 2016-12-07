@@ -1,0 +1,174 @@
+<style>
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0px;
+    padding: 0px;
+    background-color: #092B40;
+}
+main{
+    height: 100%;
+}
+#search{
+    text-align: center;
+    font-family: "Lucida Grande","Lucida Sans Unicode", Tahoma, Sans-Serif;
+    top: 40%;
+    position: relative;
+}
+#search,
+#search a{
+    color: white;
+    text-decoration: none;
+}
+form{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 4px solid #D96F32;    
+    transition: all 0.25s linear 0.3s;
+    cursor: pointer;
+    margin: 15px auto;
+}
+form.open{
+    width: 260px;
+}
+form:before{
+    content: '';
+    display: block;
+    width: 16px;
+    height: 3px;
+    background-color: #D96F32;
+    transform: rotate(45deg);
+    position: relative;
+    left: 25px;
+    top: 35px;
+    transition: all 0.15s ease 0.5s;
+}
+form.open:before{
+    width: 0px;
+    height: 0px;
+    transition: all 0.15s ease 0s;
+}
+.innerIcon{
+    width: 30px;
+    height: 30px;
+    top: -30px;
+    position: relative;
+}
+form.open .innerIcon{
+    animation: moveIconRight 0.25s linear 0.3s;
+    animation-fill-mode: forwards;
+}
+@keyframes moveIconRight{
+    from{left: 0px;}
+    to{left: 220px;}
+}
+form.open .innerIcon:before,
+form.open .innerIcon:after{
+    content: '';
+    width: 15px;
+    height: 2px;
+    background-color: #D96F32;
+    display: inline-block;
+    position: relative;
+    margin-top: 12px;
+}
+form.open .innerIcon:before{
+    transform: rotate(-45deg);
+    left: 9px;
+}
+form.open .innerIcon:after{
+    transform: rotate(45deg);
+    right: 6px;
+}
+form input{
+    width: 100%;
+    height: 100%;
+    padding: 0 30px 0 15px;
+    opacity: 0;
+    background-color: transparent;
+    color: white;
+    border: none;
+    outline: none;
+}
+form.open input {
+    opacity: 1;
+    transition-delay: 0.15s;
+    position: relative;
+}
+#search-result a{
+    color: black;
+    text-decoration: none;
+}
+#search-result ul{
+    list-style: none;
+    margin-top: 5%;
+}
+#search-result li{
+    background-color: white;
+    padding: 10px 20px;
+    margin: 15px 80px;
+}
+</style>
+<body>
+    <main ng-app="wikiApp" ng-controller="myController">
+        <div id="search">
+        <div><a href="https://en.wikipedia.org/wiki/Special:Random" target="_blank">Click here for a random article</a></div>
+            <form ng-submit="searchInWiki()">
+                <input type="text" ng-model="searchTxt" />
+                <div class="innerIcon"></div>
+            </form>
+        <div id="reminder">Click icon to search</div>
+        </div>
+        <div id="search-result">
+            <ul>
+                <li ng-repeat="result in results">
+                    <a ng-href="{{result.link}}" target="_blank" >
+                        <h1>{{result.title}}</h1><p>{{result.content}}</p>
+                    </a>
+                </li>                
+            </ul>
+        </div>
+    </main>
+</body>
+<script src="script/angular-1.3.2.min.js"></script>
+<script src="script/jquery-2.1.3.min.js"></script>
+
+<script>
+var app = angular.module('wikiApp', []);
+app.controller('myController', function($scope, $http){
+    var innerIcon = $('.innerIcon');
+    var form = $('form');
+    var input = $('input');
+    
+    innerIcon.on('click', function(){
+        if(form.hasClass('open')){
+            $scope.results = [];
+            form.removeClass('open');
+            $('#reminder').show();
+            $('#search').css("top", "40%");
+            $scope.$apply();
+        }else{
+            form.addClass('open');
+            input.focus();
+        }
+    });
+    
+    $scope.searchInWiki = function(){
+        var api = 'https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=pageimages|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=';
+        var cb = '&callback=JSON_CALLBACK';
+        var prePage = 'https://en.wikipedia.org/?curid=';
+        $http.jsonp(api + $scope.searchTxt + cb)
+        .success(function(data){
+            $scope.results = [];
+            $('#reminder').hide();
+            $('#search').css("top", "5%");
+            var results = data.query.pages;
+            angular.forEach(results, function(v,k){
+                $scope.results.push({title: v.title, content: v.extract, link: prePage + v.pageid});
+            });
+        });
+    };    
+})
+</script>

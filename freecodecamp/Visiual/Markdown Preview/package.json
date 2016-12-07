@@ -1,0 +1,16 @@
+{
+  "name": "markDownPreview",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --hot"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "marked": "^0.3.6",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1"
+  }
+}

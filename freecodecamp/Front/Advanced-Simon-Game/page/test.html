@@ -1,0 +1,41 @@
+<body>
+    <div class="cn-wrapper" id="cn-wrapper">
+        <ul>
+            <li><a href="#"><span class="icon-1">a</span></a></li>
+            <li><a href="#"><span class="icon-2">b</span></a></li>
+            <li><a href="#"><span class="icon-3">c</span></a></li>
+            <li><a href="#"><span class="icon-4">d</span></a></li>
+        </ul>
+    </div>
+</body>
+<style>
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.cn-wrapper{
+    width: 400px;
+    height: 400px;
+    background-color: red;
+    margin: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.cn-wrapper li{
+    width: 200px;
+    height: 200px;
+    background-color: green;
+    list-style: none;
+    float: left;
+}
+.cn-wrapper li:nth-child(2){
+    background-color: yellow;
+}
+.cn-wrapper li:nth-child(3){
+    background-color: pink;
+}
+.cn-wrapper li:nth-child(4){
+    background-color: blue;
+}
+</style>

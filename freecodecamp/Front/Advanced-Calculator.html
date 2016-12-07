@@ -1,0 +1,181 @@
+<link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+<link href='script/bootstrap-3.3.7.min.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div class="container">
+        <div id="calculator">
+            <div id="cal-title">ELECTRONIC CALCULATOR</div>
+            <div id="cal-screen">
+                <div id="cal-current"></div>
+                <div id="cal-history"></div>
+            </div>
+            <div id="button-group">
+                <button id="clear-button" value='ac'>AC</button>
+                <button id="clear-button" value='ce'>CE</button>
+                <button value='/'>&divide;</button>
+                <button value='x'>x</button>
+                
+                <button value='7'>7</button>
+                <button value='8'>8</button>
+                <button value='9'>9</button>
+                <button value='-'>-</button>
+                
+                <button value='4'>4</button>
+                <button value='5'>5</button>
+                <button value='6'>6</button>
+                <button value='+'>+</button>
+                
+                <button value='1'>1</button>
+                <button value='2'>2</button>
+                <button value='3'>3</button>
+                <button class="invisible-button">?</button>
+                
+                <button id="zero-button" value='0'>0</button>
+                <button value='.'>.</button>
+                <button id="equal-button" value='='>=</button>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+body {
+}
+#calculator{
+    background-color: blue;
+    width: 350px;
+    height: 430px;
+    margin: auto;
+    margin-top: 5%;
+    border-radius: 5%;
+}
+#cal-title{
+    text-align: center;
+    color: white;
+    padding-top: 5px;
+}
+#cal-screen {
+    width: 81%;
+    height: 65px;
+    background-color: green;
+    margin: 15px auto;
+    color: white;
+    text-align: right;
+    font-size: 2em;
+    padding: 3px 10px;
+}
+#cal-history{
+    font-size: 0.5em;
+}
+#button-group{
+    text-align: center;
+}
+#button-group button{
+    width: 60px;
+    height: 50px;
+    margin: 5px;
+}
+#button-group #zero-button{
+    width: 133px;
+    position: relative;
+    left: -2px;
+}
+#button-group .invisible-button{
+    visibility: hidden;
+}
+#button-group #equal-button{
+    height: 108px;
+    position: relative;
+    top: -58px;
+    float: right;
+    left: -28px;
+}
+</style>
+<script src="script/jquery-2.1.3.min.js"></script>
+<script>
+$().ready(function(){
+    var inputHistory = '';
+    function isOperator(str){
+        return str == '+' || str == '-' || str == 'x' || str == '/';
+    }
+    function isNum(str){
+        return str >= '0' && str <= '9';
+    }
+    var inputVal = '';
+    $('button').click(function(){
+        inputVal= $(this).attr('value'); 
+        if(inputVal == 'ac'){
+            $('#cal-current').text(0);
+            $('#cal-history').text(0);
+            inputHistory = '0';
+            return;
+        }
+        if(inputVal == 'ce'){
+            $('#cal-current').text(0);
+            if(inputHistory.length == 1){
+                inputHistory = '0';
+            }
+            else{
+                inputHistory = inputHistory.substring(0, inputHistory.length - 1);
+            }
+            $('#cal-history').text(inputHistory);
+            return;
+        }
+        if(inputVal == '='){
+            var arrNum = [], arrOperator = [];
+            for(var i = 0, j = 0 ; i < inputHistory.length; i++){
+                if(isOperator(inputHistory[i])){
+                    arrOperator.push(inputHistory[i]);
+                    arrNum.push(inputHistory.substring(j, i));
+                    j = i + 1;
+                }
+            }
+            arrNum.push(inputHistory.substring(j, i));
+            var calResult = '';
+            var param1 = '', param2 = '';
+            for(var j = 0 ; j < arrOperator.length ; j++){
+                if(arrOperator[j] == 'x' || arrOperator[j] == '/'){
+                    param1 = arrNum[j];
+                    param2 = arrNum[j + 1];
+                    var resultTemp = '';
+                    if(arrOperator[j] == 'x'){
+                        resultTemp = parseFloat(param1) * parseFloat(param2);
+                    }else{
+                        resultTemp = parseFloat(param1) / parseFloat(param2);
+                    }
+                    arrOperator.splice(j, 1);
+                    arrNum.splice(j, 2, resultTemp);
+                }
+            }
+            for(var i = 0, j = 0 ; i < arrNum.length - 1 ; i++, j++){
+                if(calResult === ''){
+                    param1 = arrNum[i];
+                    param2 = arrNum[i + 1];
+                }else{
+                    param1 = calResult;
+                    param2 = arrNum[i + 1];
+                }
+                switch(arrOperator[j]){
+                    case '+':
+                        calResult = parseFloat(param1) + parseFloat(param2);
+                        break;
+                    case '-':
+                        calResult = parseFloat(param1) - parseFloat(param2);
+                        break;
+                    case 'x':
+                        calResult = parseFloat(param1) * parseFloat(param2);
+                        break;
+                    case '/':
+                        calResult = parseFloat(param1) / parseFloat(param2);
+                        break;
+                }
+            }
+            $('#cal-current').text(calResult);
+            return;
+        }
+        inputHistory = inputHistory + inputVal;        
+        $('#cal-history').text(inputHistory);
+        $('#cal-current').text(inputVal)
+    });
+});
+</script>

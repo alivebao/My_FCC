@@ -1,0 +1,248 @@
+<body>
+    <main ng-app="TwitchApi">
+      <section ng-controller="MainCtrl">
+        <header>
+          <ul id="mainMenu">
+            <li data-display="allUsers" class="activeMenu">All</li>
+            <li data-display="onlineUsers">Online</li>
+            <li data-display="offlineUsers">Offline</li>
+          </ul>
+        </header>
+        <div id="searchMenu"><i id="searchIcon" class="fa fa-search"></i>
+          <input type="text" ng-model="searchText" id="searchBar"/>
+        </div>
+        <ul id="people"><a href="http://twitch.tv/{{user.username}}" target="_blank" ng-repeat="user in profile | filter:searchText">
+            <li><img ng-src="{{user.logo}}" err-src="http://placehold.it/50x50" class="pic"/><span class="name">{{user.name}}</span><span class="status"><i class="{{user.status}}"></i></span><span class="title">{{user.streamTitle}}</span></li></a></ul>
+      </section>
+    </main>
+</body>
+<link href="script/font-awesome.min.css"/>
+<style>
+@import url(http://fonts.googleapis.com/css?family=Roboto:300);
+body {
+  background: #f79f94;
+}
+
+main {
+  margin: 0 auto;
+  width: 300px;
+  border: 1px solid #F47564;
+  background: white;
+}
+main header {
+  height: 50px;
+  background-color: #F47564;
+  position: relative;
+}
+main header ul {
+  margin-top: 0;
+  padding-left: 0;
+}
+main header li {
+  position: relative;
+  list-style-type: none;
+  display: inline-block;
+  font-family: Roboto, Arial, Sans-Serif;
+  color: white;
+  padding-left: 30px;
+  padding-top: 15px;
+  padding-bottom: 16px;
+  padding-right: 25px;
+  border-right: 1px solid #f79f94;
+}
+main header li:first-child {
+  padding-right: 35px;
+}
+main header li:last-child {
+  border-right: none;
+}
+main header li:hover {
+  cursor: pointer;
+}
+main header .activeMenu:after, main header .activeMenu:before {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+main header .activeMenu:after {
+  border-top-color: #F47564;
+  border-width: 10px;
+  margin-left: -10px;
+  z-index: 10;
+}
+main #searchMenu {
+  text-align: center;
+  position: relative;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #E4E0E1;
+}
+main #searchMenu #searchBar {
+  position: relative;
+  width: 70%;
+  text-align: left;
+  line-height: 20px;
+  border-radius: 20px;
+  border: 1px solid #E4E0E1;
+  outline: none;
+  padding-left: 40px;
+  padding-right: 20px;
+  font-size: .8em;
+  font-family: Roboto, Arial, Sans-Serif;
+}
+main #searchMenu #searchIcon {
+  position: absolute;
+  z-index: 1;
+  padding-top: 3px;
+  left: 25px;
+  color: #E4E0E1;
+}
+main #people {
+  padding-left: 0;
+}
+main #people a {
+  text-decoration: none;
+}
+main #people li {
+  list-style-type: none;
+  display: block;
+  padding-left: 20px;
+  position: relative;
+  font-family: Roboto, Arial, Sans-Serif;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+main #people li:nth-child(even) {
+  background-color: #f7f6f6;
+}
+main #people li .pic {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+main #people li .name, main #people li .status {
+  position: absolute;
+  line-height: 50px;
+}
+main #people li .name {
+  left: 80px;
+  color: #F47564;
+}
+main #people li .status {
+  right: 20px;
+}
+main #people li .title {
+  color: #b5a9ac;
+  font-size: .7em;
+}
+
+.green {
+  color: #8FD7D6;
+}
+
+.red {
+  color: #F47564;
+}
+
+</style>
+<script src="script/angular-1.3.2.min.js"></script>
+<script src="script/jquery-2.1.3.min.js"></script>
+<script>
+// Angular controller to get Twitch users
+var app = angular.module('TwitchApi', []);
+app.controller('MainCtrl', function($scope, $http) {
+  
+  // Scope variables
+	$scope.allUsers = [];
+  $scope.onlineUsers = [];
+  $scope.offlineUsers = [];
+  
+  // Local variables
+  var streamers = ["freecodecamp", "GeoffStorbeck", "terakilobyte", "habathcx","notmichaelmcdonald","RobotCaleb","medrybw","comster404","brunofin","thomasballinger","joe_at_underflow","noobs2ninjas","mdwasp","beohoff","xenocomagain"];
+  var cb = '?client_id=5j0r5b7qb7kro03fvka3o8kbq262wwm&callback=?';
+	var url = 'https://api.twitch.tv/kraken/';
+  
+  // Get information for streamers
+	streamers.forEach(function(stream) {
+    
+    // Temporary object
+    var obj = {};
+    
+    // Check if streaming
+		$.getJSON(url + 'streams/' + stream + cb).success(function(data) {
+      var streaming = (data.stream === null) ? false : true;
+      if (streaming) {
+        obj.status = 'green fa fa-check';
+        var streamTitle = data.stream.channel.status;
+        
+        if (streamTitle.length > 36) {
+          streamTitle = streamTitle.substring(0,33);
+          streamTitle += '...';
+        }
+        obj.streamTitle = streamTitle;
+      } else {
+        obj.status = 'red fa fa-exclamation';
+        data.streamTitle = '';
+      }
+      obj.username = stream;
+      
+      // Get user name and image
+      $.getJSON(url + 'users/' + stream + cb).success(function(data) {
+        obj.name = data.display_name;
+        obj.logo = data.logo;
+        
+        $scope.allUsers.push(obj);
+        if (streaming) {
+          $scope.onlineUsers.push(obj);
+        } else {
+          $scope.offlineUsers.push(obj);
+        }
+        $scope.profile = $scope.allUsers;
+        $scope.$apply();
+      });
+    });
+  });
+  
+  // Change arrow on main menu
+  $('#mainMenu li').on('click', function() {
+   
+    if ($(this).data('display') === 'allUsers') {
+      $scope.profile = $scope.allUsers;
+    } else if ($(this).data('display') === 'onlineUsers') {
+      $scope.profile = $scope.onlineUsers;
+    } else {
+      $scope.profile = $scope.offlineUsers;
+    }
+    $scope.$apply();
+    
+    // Change arrow
+    $('#mainMenu li').removeClass('activeMenu');
+    $(this).addClass('activeMenu');
+    
+  })
+});
+
+app.directive('errSrc', function() {
+  return {
+    link: function(scope, element, attrs) {
+
+      scope.$watch(function() {
+          return attrs['ngSrc'];
+        }, function (value) {
+          if (!value) {
+            element.attr('src', attrs.errSrc);  
+          }
+      });
+
+      element.bind('error', function() {
+        element.attr('src', attrs.errSrc);
+      });
+    }
+  }
+});
+</script>
