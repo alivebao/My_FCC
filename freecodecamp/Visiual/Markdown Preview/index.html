@@ -1,15 +1,48 @@
 <html>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <head>
         <script src="../script/react.js"></script>
         <script src="../script/react-dom.js"></script>
         <script src="../script/browser.min.js"></script>
-        <script src="../script/jquery-3.1.1.min.js"></script>
         <script src="../script/marked.js"></script>
     </head>
+    
     <body>
-    <div id="content"></div>
-    <script>
-        $('#content').html(marked('# Marked in browser\n\nRendered by **marked**.'));
+        <div id="content"></div>
+    </body>
+
+    <script type="text/babel">
+    var MarkdownPreview = React.createClass({
+        getInitialState : function () {
+            return {
+                value: '# hello, This is Markdown Live Preview\n\n----\n## what is Markdown?\nsee [Wikipedia](http://en.wikipedia.org/wiki/Markdown)'
+            };
+        },
+        handleChange(event) {
+            this.setState({value: event.target.value});
+        },
+        createMarkdownPreview() {
+            return {__html: marked(this.state.value)};
+        },
+        render: function() {
+            return (
+            <div>
+                <h1 id="markdown-title">Markdown Live Preview</h1>
+                <div id="markdown-content">
+                    <div id="markdown-src">
+                        <textarea className="markdown-border" type="text" onChange={this.handleChange} value={this.state.value}></textarea>
+                    </div>
+                    <div id="markdown-des" className="markdown-border" dangerouslySetInnerHTML={this.createMarkdownPreview()}></div>
+                    <div className="clear-all"></div>
+                </div>
+            </div>
+            )
+        }
+    });
+    
+    ReactDOM.render(
+        <MarkdownPreview />,
+        document.getElementById('content')
+    );
     </script>
-</body>
 </html>
