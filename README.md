@@ -5,7 +5,7 @@ Some Practice of Programming
   * [Basic-Personal_Introduction](https://codepen.io/19920612/full/WGEzwr/)
   * [Intermediate-Random_Quote](https://codepen.io/19920612/full/jrxLaw/)
   * [Intermediate-Local_Weather](https://codepen.io/19920612/full/wzRLXz/)
-  * [Intermediate-Twitchtv-json](https://codepen.io/19920612/full/NRZjMw/)
+  * [Intermediate-Twitchtv_json](https://codepen.io/19920612/full/NRZjMw/)
   * [Intermediate-Wiki_Reader](https://codepen.io/19920612/full/yaAmxp/)
   * [Advanced-Calculator](https://codepen.io/19920612/full/XNJqYW/)
   * [Advanced-Pomodoro_Clock](https://codepen.io/19920612/full/gLrXMz/)
