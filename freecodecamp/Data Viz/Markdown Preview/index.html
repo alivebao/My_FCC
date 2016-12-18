@@ -40,6 +40,39 @@
         }
     });
     
+    class App extends React.Component {
+        constructor(props){
+            super(props);
+            this.state = {
+                value: '# hello, This is Markdown Live Preview\n\n----\n## what is Markdown?\nsee [Wikipedia](http://en.wikipedia.org/wiki/Markdown)'
+            }
+            this.handleChange = this.handleChange.bind(this);
+            this.createMarkdownPreview = this.createMarkdownPreview.bind(this);
+        }
+        handleChange(event) {
+            this.setState({value: event.target.value});
+        }
+        createMarkdownPreview() {
+            return {__html: marked(this.state.value)};
+        }
+        render() {
+            var value = this.state.value;
+            return (
+            <div>
+                <h1 id="markdown-title">Markdown Live Preview</h1>
+                <div id="markdown-content">
+                    <div id="markdown-src">
+                        <textarea className="markdown-border" type="text" onChange={this.handleChange} value={value}></textarea>
+                    </div>
+                    <div id="markdown-des" className="markdown-border" dangerouslySetInnerHTML={this.createMarkdownPreview()}>
+                    </div>
+                    <div className="clear-all"></div>
+                </div>
+            </div>
+            )
+        }
+    }
+
     ReactDOM.render(
         <MarkdownPreview />,
         document.getElementById('content')
