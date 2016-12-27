@@ -1,0 +1,11 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+.clear-all{
+    clear: both;
+}
+#leader-table th,
+#leader-table td{
+    border: 1px solid black;
+}

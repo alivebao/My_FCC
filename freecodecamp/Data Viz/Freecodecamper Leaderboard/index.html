@@ -1,0 +1,87 @@
+<html>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <head>
+        <script src="../script/react.js"></script>
+        <script src="../script/react-dom.js"></script>
+        <script src="../script/browser.min.js"></script>
+        <script src="../script/jquery-2.1.3.min.js"></script>
+    </head>
+    
+    <body>
+        <div id="leader-table"></div>
+    </body>
+
+    <script type="text/babel">
+    class User extends React.Component{
+        render() {
+            return (
+            <tr>
+                <td>{this.props.count}</td>
+                <td>
+                  <a href={"https://www.freecodecamp.com/"+this.props.user.username} target="_blank">
+                    <span>{this.props.user.username}</span>
+                  </a>
+                </td>
+                <td>{this.props.user.recent}</td>
+                <td>{this.props.user.alltime}</td>
+            </tr>
+            )
+        }
+    }
+    
+    class LeaderTable extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                uesrList: [],
+            }
+        }
+        
+        componentDidMount() {
+            $.get(this.props.source, function(result) {
+                this.setState({
+                    userList: result.slice()
+                    });
+            }.bind(this));
+        }
+        
+        render() {
+            if(typeof this.state.userList != 'undefined'){
+                var count = 0;
+                var userArr = this.state.userList.map(function(user) {
+                    count++;
+                    return (
+                        <User user={user} key={user.username} count={count} />
+                    )
+                });
+                return(
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th colSpan="4">Leaderboard</th>
+                            </tr>
+                            <tr>
+                                <td>#</td>
+                                <td>Camper Name</td>
+                                <td>Points in past 30 days</td>
+                                <td>All time points</td>
+                            </tr>
+                            {userArr}
+                        </tbody>                    
+                    </table>
+                )
+            }
+
+            return(
+            <div>
+                Loading...
+            </div>
+            )
+        }
+    }
+    ReactDOM.render(
+        <LeaderTable source="https://fcctop100.herokuapp.com/api/fccusers/top/recent"/>,
+        document.getElementById('leader-table')
+    );
+    </script>
+</html>
