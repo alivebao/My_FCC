@@ -17,8 +17,10 @@
             return (
             <tr>
                 <td>{this.props.count}</td>
+                <td><img src={this.props.user.img} /></td>
                 <td>
                   <a href={"https://www.freecodecamp.com/"+this.props.user.username} target="_blank">
+                    
                     <span>{this.props.user.username}</span>
                   </a>
                 </td>
@@ -33,20 +35,44 @@
         constructor(props){
             super(props);
             this.state = {
+                alltimeUrl: "https://fcctop100.herokuapp.com/api/fccusers/top/alltime",
+                recentUrl: "https://fcctop100.herokuapp.com/api/fccusers/top/recent",
                 uesrList: [],
             }
+            this.resetUserList = this.resetUserList.bind(this);
+            this.getRecentData = this.getRecentData.bind(this);
+            this.getAllTimeData = this.getAllTimeData.bind(this);
         }
         
         componentDidMount() {
-            $.get(this.props.source, function(result) {
+            this.getRecentData();
+        }
+        
+        resetUserList() {
+            this.setState({
+                userList: 0
+            });
+        }
+        getRecentData() {
+            this.resetUserList();
+            $.get(this.state.recentUrl, function(result) {
                 this.setState({
                     userList: result.slice()
-                    });
+                });
             }.bind(this));
         }
         
+        getAllTimeData() {
+            this.resetUserList();
+            $.get(this.state.alltimeUrl, function(result) {
+                this.setState({
+                    userList: result.slice()
+                });
+            }.bind(this));
+        }        
+        
         render() {
-            if(typeof this.state.userList != 'undefined'){
+            if(typeof this.state.userList != 'undefined' && this.state.userList !== 0){
                 var count = 0;
                 var userArr = this.state.userList.map(function(user) {
                     count++;
@@ -58,25 +84,26 @@
                     <table>
                         <tbody>
                             <tr>
-                                <th colSpan="4">Leaderboard</th>
+                                <th colSpan="5">Leaderboard</th>
                             </tr>
                             <tr>
                                 <td>#</td>
+                                <td className="special-width">avater</td>
                                 <td>Camper Name</td>
-                                <td>Points in past 30 days</td>
-                                <td>All time points</td>
+                                <td className="reset-list-btn" onClick={this.getRecentData}>Points in past 30 days</td>
+                                <td className="reset-list-btn" onClick={this.getAllTimeData}>All time points</td>
                             </tr>
                             {userArr}
                         </tbody>                    
                     </table>
                 )
+            }else{
+                return(
+                <div>
+                    Loading...
+                </div>
+                )
             }
-
-            return(
-            <div>
-                Loading...
-            </div>
-            )
         }
     }
     ReactDOM.render(
@@ -84,4 +111,39 @@
         document.getElementById('leader-table')
     );
     </script>
+    <style>
+    #leader-table .reset-list-btn{
+        cursor: pointer;
+    }
+    #leader-table .special-width{
+        width: 30%;
+    }
+    #leader-table .reset-list-btn:hover{
+        color: white;
+        background-color: black;
+    }
+    #leader-table table{
+        width: 80%;
+        margin-left: 10%;
+    }
+    #leader-table table img{
+        width: 10%;
+        border-radius: 50%;
+    }
+    #leader-table table tr{
+        text-align: center;
+        height: 40px;
+    }
+    #leader-table table tr:nth-of-type(odd){
+        background-color: #eef0ee;
+    }
+    #leader-table table a{
+        text-decoration: none;
+        color: #337ab7;
+    }
+    #leader-table table a span{
+        padding: 10px;
+        display: inline-block;
+    }
+    </style>
 </html>

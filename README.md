@@ -12,6 +12,7 @@ Some Practice of Programming
   * [Advanced-TTT_Game](https://codepen.io/19920612/full/xREoKN/)
   * [Advanced-Simon_Game](https://codepen.io/19920612/full/woqpmg/)
   * [Visiual-Markdown_Preview](http://codepen.io/19920612/full/eBPdWy/)
+  * [Visiual-Freecodecamper_Leaderboard](http://codepen.io/19920612/full/dOBxXB/)
 * JSGame
   * [Grey Plane](https://codepen.io/19920612/full/BQvgPx/)
 * [Professional JavaScript for Web Developers 3rd Edition](https://github.com/alivebao/Practice/tree/master/Professional%20JavaScript%20for%20Web%20Developers%203rd%20Edition)
