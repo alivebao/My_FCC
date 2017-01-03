@@ -1,6 +1,6 @@
 Some Practice of Programming
 
-* freecodecamp
+* Freecodecamp
   * [Basic-Trubite_Page](https://codepen.io/19920612/full/NRvRGm/)
   * [Basic-Personal_Introduction](https://codepen.io/19920612/full/WGEzwr/)
   * [Intermediate-Random_Quote](https://codepen.io/19920612/full/jrxLaw/)
