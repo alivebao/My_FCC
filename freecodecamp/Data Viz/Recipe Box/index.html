@@ -1,148 +1,188 @@
 <html>
-    <link rel="stylesheet" type="text/css" href="style.css">
     <head>
+        <link rel="stylesheet" type="text/css" href="../script/bootstrap-3.3.6.min.css">
         <script src="../script/react.js"></script>
         <script src="../script/react-dom.js"></script>
         <script src="../script/browser.min.js"></script>
         <script src="../script/jquery-2.1.3.min.js"></script>
+        <script src="../script/bootstrap-3.3.7.min.js"></script>
     </head>
     
     <body>
-        <div id="leader-table"></div>
+        <div class="container">
+          <div id="reciptApp-container" class="well"></div>
+          <div id="button"></div>
+        </div>
     </body>
 
     <script type="text/babel">
-    class User extends React.Component{
+    var idNum = 0;
+    
+    class ReciptModal extends React.Component{
         render() {
-            return (
-            <tr>
-                <td>{this.props.count}</td>
-                <td><img src={this.props.user.img} /></td>
-                <td>
-                  <a href={"https://www.freecodecamp.com/"+this.props.user.username} target="_blank">
-                    <span>{this.props.user.username}</span>
-                  </a>
-                </td>
-                <td>{this.props.user.recent}</td>
-                <td>{this.props.user.alltime}</td>
-            </tr>
+            return(
+                <div id={this.props.reciptId} className="modal fade" role="dialog">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button type="button" className="close" data-dismiss="modal">&times;</button>
+                                <h4 className="modal-title">{this.props.type === "addItem" ? "Add a Recipt" : "Edit Recipe"}</h4>
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className="form-group">
+                                        <label for="recipt-title">Recipt</label>
+                                        <input id={this.props.type === "addItem" ? "recipt-title-add-recipt" : "recipt-title-" + this.props.reciptId} type="text" className="form-control" placeholder="Recipe Name" defaultValue={this.props.type === "addItem" ? "" : this.props.reciptName}></input>
+                                    </div>
+                                    <div className="form-group">
+                                        <label for="recipt-foods">Ingredients</label>
+                                        <textarea id={this.props.type === "addItem" ? "recipt-foods-add-recipt" : "recipt-foods-" + this.props.reciptId} type="text" className="form-control" placeholder="Enter Ingredients,Separated,By Commas" defaultValue={this.props.type === "addItem" ? "" : this.props.reciptFoods}></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-primary" onClick={this.props.handler}>{this.props.type === "addItem" ? "Add a Recipt" : "Edit Recipe"}</button>
+                                <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )
         }
     }
     
-    class LeaderTable extends React.Component{
+    class ReciptItem extends React.Component{
         constructor(props){
             super(props);
             this.state = {
-                alltimeUrl: "https://fcctop100.herokuapp.com/api/fccusers/top/alltime",
-                recentUrl: "https://fcctop100.herokuapp.com/api/fccusers/top/recent",
-                uesrList: []
+                id: this.props.reciptId,
+                reciptName: this.props.reciptName,
+                reciptTitle: "Ingredients",
+                reciptFoods: React.Children.map(this.props.children, function(child) {
+                                return child.props.children;
+                            })
             }
-            this.resetUserList = this.resetUserList.bind(this);
-            this.getRecentData = this.getRecentData.bind(this);
-            this.getAllTimeData = this.getAllTimeData.bind(this);
+            this.hideItem = this.hideItem.bind(this);
+            this.editItem = this.editItem.bind(this);
         }
-        
-        componentDidMount() {
-            this.getRecentData();
+        hideItem(){
+            $("#wrapper-" + this.state.id).hide();
         }
-        
-        resetUserList() {
-            this.setState({
-                userList: 0
-            });
+        editItem(){
+            this.setState({reciptName: $("#recipt-title-" + "modal-" + this.state.id).val()});
+            this.setState({reciptFoods: $("#recipt-foods-" + "modal-" + this.state.id).val().split(",")});
+            $("#modal-" + this.state.id).modal("hide");
         }
-        getRecentData() {
-            this.resetUserList();
-            $.get(this.state.recentUrl, function(result) {
-                this.setState({
-                    userList: result.slice()
-                });
-            }.bind(this));
-        }
-        
-        getAllTimeData() {
-            this.resetUserList();
-            $.get(this.state.alltimeUrl, function(result) {
-                this.setState({
-                    userList: result.slice()
-                });
-            }.bind(this));
-        }        
-        
         render() {
-            if(typeof this.state.userList != 'undefined' && this.state.userList !== 0){
-                var count = 0;
-                var userArr = this.state.userList.map(function(user) {
-                    count++;
-                    return (
-                        <User user={user} key={user.username} count={count} />
-                    )
-                });
-                return(
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th colSpan="5">Leaderboard</th>
-                            </tr>
-                            <tr>
-                                <td>#</td>
-                                <td className="special-width">avater</td>
-                                <td>Camper Name</td>
-                                <td className="reset-list-btn" onClick={this.getRecentData}>Points in past 30 days</td>
-                                <td className="reset-list-btn" onClick={this.getAllTimeData}>All time points</td>
-                            </tr>
-                            {userArr}
-                        </tbody>                    
-                    </table>
-                )
-            }else{
-                return(
-                <div>
-                    Loading...
+            return(
+                <div id={"wrapper-" + this.state.id}>
+                    <div className="panel-heading">
+                        <span data-toggle="collapse" data-target={"#collapse-" + this.state.id}>
+                            {this.state.reciptName}
+                        </span>
+                    </div>
+                    <div className="panel-body collapse" id={"collapse-" + this.state.id}>
+                        <h4 className="text-center">{this.state.reciptTitle}</h4>
+                        <hr></hr>
+                        <ul className="list-group">
+                            {
+                                React.Children.map(this.state.reciptFoods, function(child) {
+                                    return <li className="list-group-item">{child}</li>
+                                })
+                            }
+                        </ul>
+
+                        <button className="btn btn-danger" onClick={this.hideItem}>Delete</button>
+                        <button className="btn btn-default" data-toggle="modal" data-target={"#modal-" + this.state.id}>Edit</button>
+                        
+                        <ReciptModal reciptId={"modal-" + this.state.id} type="editItem" reciptName={this.state.reciptName} reciptFoods={this.state.reciptFoods} handler = {this.editItem} ></ReciptModal>
+                    </div>                    
                 </div>
                 )
-            }
         }
     }
+    
+    class ReciptApp extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                recipts: [
+                            {"reciptId": idNum++,
+                            "reciptName": "Pumpkin Pie",
+                            "reciptFoods": ["pumpkin Pures", "Sweetened Condensed Milk", "Eggs", "Pumpkin Pie Spice", "Pie Crust"]
+                            },
+                            {"reciptId": idNum++,
+                            "reciptName": "Spaghetti",
+                            "reciptFoods": ["Noodles", "Tomato Sauce", "(Optional) Meatballs"]
+                            }
+                        ]
+            }
+            this.addItem = this.addItem.bind(this);
+        }
+        addItem(){
+            if($('#recipt-title-add-recipt').val() == "" || $('#recipt-foods-add-recipt').val() == ""){
+                alert("Please input Recipt name and Ingredients");
+                return ;
+            }
+            var result = this.state.recipts;
+            result.push({
+                            "reciptId": idNum++,
+                            "reciptName": $('#recipt-title-add-recipt').val(),
+                            "reciptFoods": $('#recipt-foods-add-recipt').val().split(",")
+                        });
+            this.setState({
+                recipts: result
+            });
+            $('#recipt-title-add-recipt').val("");
+            $('#recipt-foods-add-recipt').val("");
+            $("#modal-add-recipt").modal("hide");
+        }
+        render() {
+            var result = this.state.recipts.map(function(recipt) {
+                            return (
+                                <ReciptItem key={recipt.reciptName} reciptId={recipt.reciptId} reciptName={recipt.reciptName}>
+                                    <span>{recipt.reciptFoods}</span>
+                                </ReciptItem>
+                            )
+                        });
+            return(
+            <div>
+                {result}
+                <button className="btn btn-lg btn-primary" data-toggle="modal" data-target="#modal-add-recipt">
+                    Add Recipe
+                </button>
+                
+                <ReciptModal reciptId="modal-add-recipt" type="addItem" handler = {this.addItem} ></ReciptModal>
+            </div>
+            )
+        }
+    }
+    
     ReactDOM.render(
-        <LeaderTable />,
-        document.getElementById('leader-table')
+        <ReciptApp></ReciptApp>,
+        document.getElementById('reciptApp-container')
     );
     </script>
     <style>
-    #leader-table .reset-list-btn{
+    #reciptApp-container .btn{
+        margin: 10px;
+    }
+    #reciptApp-container .panel-heading{
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+    #reciptApp-container .panel-heading span{
         cursor: pointer;
     }
-    #leader-table .special-width{
-        width: 30%;
+    #reciptApp-container .panel-body{
+        background-color: white;
     }
-    #leader-table .reset-list-btn:hover{
-        color: white;
-        background-color: black;
+    #reciptApp-container .panel-body .btn{
+        width: 100px;
     }
-    #leader-table table{
-        width: 80%;
-        margin-left: 10%;
-    }
-    #leader-table table img{
-        width: 10%;
-        border-radius: 50%;
-    }
-    #leader-table table tr{
-        text-align: center;
-        height: 40px;
-    }
-    #leader-table table tr:nth-of-type(odd){
-        background-color: #eef0ee;
-    }
-    #leader-table table a{
-        text-decoration: none;
-        color: #337ab7;
-    }
-    #leader-table table a span{
-        padding: 10px;
-        display: inline-block;
+    #reciptApp-container .modal-footer .btn{
+        margin-bottom: 0px;
     }
     </style>
 </html>
