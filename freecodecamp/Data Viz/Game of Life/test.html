@@ -1,0 +1,165 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="../script/bootstrap-3.3.6.min.css">
+    <script src="../script/react.js"></script>
+    <script src="../script/react-dom.js"></script>
+    <script src="../script/browser.min.js"></script>
+    <script src="../script/jquery-2.1.3.min.js"></script>
+    <script src="../script/bootstrap-3.3.7.min.js"></script>
+  </head>
+    
+  <body id="life-game">
+    <div class="container">
+      <div id="game-header">
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-default" id="game-run">
+            <input type="radio">Run
+          </label>
+          <label class="btn btn-default" id="game-pause">
+            <input type="radio">Pause
+          </label>
+          <label class="btn btn-default" id="game-clear">
+            <input type="radio">Clear
+          </label>
+        </div>
+        <span>Generation: 0</span>
+      </div>
+      
+      <div id="game-body">
+        
+      </div>
+      
+      <div id="game-footer">
+        
+      </div>
+    </div>
+  </body>
+
+  <script type="text/babel">
+    $().ready(function() {
+        $('#btn-50-30').click(function() {
+            alert("D");
+        });
+    });
+    class CellUnit extends React.Component{
+        constructor(props){
+            super(props);
+        }
+        render() {
+        }
+    }
+    class CellFooter extends React.Component{
+        constructor(props){
+            super(props);
+        }
+        updateSize(sizeType) {
+            this.props.updateSize(sizeType);
+        }
+        updateSpeed(speedType) {
+            this.props.updateSpeed(speedType);
+        }
+        render() {
+            return(
+                <div>
+                    <div className="board-size world-size-selector btn-group" data-toggle="buttons">
+                        <label className="btn btn-default" id="btn-50-30" onClick={() => this.updateSize(0)}>
+                            <input type="radio" />{"Size: " + this.props.worldSizeArr[0][0] + "*" + this.props.worldSizeArr[0][1]}
+                        </label>
+                        <label className="btn btn-default active" id="btn-70-50" onClick={() => this.updateSize(1)}>
+                            <input type="radio" />{"Size: " + this.props.worldSizeArr[1][0] + "*" + this.props.worldSizeArr[1][1]}
+                        </label>
+                        <label className="btn btn-default" id="btn-100-80" onClick={() => this.updateSize(2)}>
+                            <input type="radio" />{"Size: " + this.props.worldSizeArr[2][0] + "*" + this.props.worldSizeArr[2][1]}
+                        </label>
+                    </div>
+                    <div></div>
+                    <div className="btn-group evolve-speed-selector" data-toggle="buttons">
+                        <label className="btn btn-default active" id="speed-slow" onClick={() => this.updateSpeed(0)}>
+                         <input type="radio" />Slow
+                        </label>
+                        <label className="btn btn-default" id="speed-medium" onClick={() => this.updateSpeed(1)}>
+                            <input type="radio" />Medium
+                        </label>
+                        <label className="btn btn-default" id="speed-fast" onClick={() => this.updateSpeed(2)}>
+                            <input type="radio" />Fast
+                        </label>
+                    </div>
+                </div>
+            )
+        }
+    }
+    class CellGame extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                sizeType: 1,
+                speedType: 0,
+                currentGeneration: 0
+            }
+            this.updateSize = this.updateSize.bind(this);
+            this.updateSpeed = this.updateSpeed.bind(this);
+        }
+        updateSize(typeId) {
+            this.setState({
+                sizeType: typeId
+            });
+        }
+        updateSpeed(typeId) {
+            this.setState({
+                speedType: typeId
+            });
+        }
+        render() {
+            return (
+                <div>
+                    <p>{this.props.worldSizeArr[this.state.sizeType]}</p>
+                    <CellFooter 
+                    updateSize={this.updateSize} 
+                    updateSpeed={this.updateSpeed} 
+                    worldSizeArr={this.props.worldSizeArr} 
+                    ></CellFooter>
+                </div>
+            )
+        }
+    }
+    ReactDOM.render(
+        <CellGame worldSizeArr = {[[50, 30], [70, 50], [100, 80]]}></CellGame>,
+        $('#game-body')[0]
+    );
+  </script>
+  <style>
+    #life-game .btn{
+      background: #222;
+      color: #ddd; 
+      border: none;
+      border-radius: 5px;
+      height: 30px;
+      margin: 5px;
+    }
+    #life-game .btn.active.focus {
+        outline: none;
+    }
+    #life-game .active{
+      color: #222;
+      background:  #faa;
+    }
+    #life-game .cell{
+        font-size: 9px;
+        width: 12px;
+        height: 12px;
+        border-top: 1px solid #333;
+        border-left: 1px solid #222;
+        margin: 0px;
+        float: left;
+    }
+    #life-game .dead{
+        background: #000;
+    }
+    #life-game .alive{
+        background: #fbb;
+    }
+    #life-game .old{
+        background: #e44;
+    }
+  </style>
+</html>
