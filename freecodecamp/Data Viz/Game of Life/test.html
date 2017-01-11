@@ -36,51 +36,75 @@
   </body>
 
   <script type="text/babel">
-    $().ready(function() {
-        $('#btn-50-30').click(function() {
-            alert("D");
-        });
-    });
     class CellUnit extends React.Component{
         constructor(props){
             super(props);
         }
         render() {
+        //todo: 
+        //1. change if/else to (? : )
+        //2. add click event toggle class "alive"
+            if(this.props.isFirstInRow(this.props.cellSeq)){
+                return (
+                    <div className="cell dead clearfix" data-tr={this.props.cellSeq}></div>           
+                )            
+            }else{
+                return (
+                    <div className="cell dead" data-tr={this.props.cellSeq}></div>           
+                )
+            }
+        }
+    }
+    class CellBody extends React.Component{
+        constructor(props){
+            super(props);
+        }
+        render() {
+            var gameBody = [];
+            for(var rowNum = 0 ; rowNum < this.props.row ; rowNum++){
+                for(var colNum = 0 ; colNum < this.props.col ; colNum++){
+                    gameBody.push(
+                        <CellUnit 
+                        cellSeq={this.props.col * rowNum + colNum + 1} 
+                        isFirstInRow={this.props.isFirstInRow} 
+                        ></CellUnit>
+                    );   
+                }
+            }
+            return (
+                <div>
+                    {gameBody}
+                </div>
+            )
         }
     }
     class CellFooter extends React.Component{
         constructor(props){
             super(props);
         }
-        updateSize(sizeType) {
-            this.props.updateSize(sizeType);
-        }
-        updateSpeed(speedType) {
-            this.props.updateSpeed(speedType);
-        }
         render() {
             return(
-                <div>
-                    <div className="board-size world-size-selector btn-group" data-toggle="buttons">
-                        <label className="btn btn-default" id="btn-50-30" onClick={() => this.updateSize(0)}>
+                <div className="clearfix">
+                    <div className="world-size-selector btn-group" data-toggle="buttons">
+                        <label className="btn btn-default active" id="btn-50-30" onClick={() => this.props.updateSize(0)}>
                             <input type="radio" />{"Size: " + this.props.worldSizeArr[0][0] + "*" + this.props.worldSizeArr[0][1]}
                         </label>
-                        <label className="btn btn-default active" id="btn-70-50" onClick={() => this.updateSize(1)}>
+                        <label className="btn btn-default" id="btn-70-50" onClick={() => this.props.updateSize(1)}>
                             <input type="radio" />{"Size: " + this.props.worldSizeArr[1][0] + "*" + this.props.worldSizeArr[1][1]}
                         </label>
-                        <label className="btn btn-default" id="btn-100-80" onClick={() => this.updateSize(2)}>
+                        <label className="btn btn-default" id="btn-100-80" onClick={() => this.props.updateSize(2)}>
                             <input type="radio" />{"Size: " + this.props.worldSizeArr[2][0] + "*" + this.props.worldSizeArr[2][1]}
                         </label>
                     </div>
                     <div></div>
                     <div className="btn-group evolve-speed-selector" data-toggle="buttons">
-                        <label className="btn btn-default active" id="speed-slow" onClick={() => this.updateSpeed(0)}>
+                        <label className="btn btn-default active" id="speed-slow" onClick={() => this.props.updateSpeed(0)}>
                          <input type="radio" />Slow
                         </label>
-                        <label className="btn btn-default" id="speed-medium" onClick={() => this.updateSpeed(1)}>
+                        <label className="btn btn-default" id="speed-medium" onClick={() => this.props.updateSpeed(1)}>
                             <input type="radio" />Medium
                         </label>
-                        <label className="btn btn-default" id="speed-fast" onClick={() => this.updateSpeed(2)}>
+                        <label className="btn btn-default" id="speed-fast" onClick={() => this.props.updateSpeed(2)}>
                             <input type="radio" />Fast
                         </label>
                     </div>
@@ -92,12 +116,13 @@
         constructor(props){
             super(props);
             this.state = {
-                sizeType: 1,
-                speedType: 0,
+                sizeType: $('#life-game .world-size-selector .active').prevAll().length,
+                speedType: $('#life-game .evolve-speed-selector .active').prevAll().length,
                 currentGeneration: 0
             }
             this.updateSize = this.updateSize.bind(this);
             this.updateSpeed = this.updateSpeed.bind(this);
+            this.isFirstInRow = this.isFirstInRow.bind(this);
         }
         updateSize(typeId) {
             this.setState({
@@ -109,14 +134,21 @@
                 speedType: typeId
             });
         }
+        isFirstInRow(cellSeq){
+            return cellSeq % this.props.worldSizeArr[this.state.sizeType][0] == 1;
+        }
         render() {
             return (
                 <div>
-                    <p>{this.props.worldSizeArr[this.state.sizeType]}</p>
+                    <CellBody 
+                        col={this.props.worldSizeArr[this.state.sizeType][0]} 
+                        row={this.props.worldSizeArr[this.state.sizeType][1]} 
+                        isFirstInRow={this.isFirstInRow} 
+                    ></CellBody>
                     <CellFooter 
-                    updateSize={this.updateSize} 
-                    updateSpeed={this.updateSpeed} 
-                    worldSizeArr={this.props.worldSizeArr} 
+                        updateSize={this.updateSize} 
+                        updateSpeed={this.updateSpeed} 
+                        worldSizeArr={this.props.worldSizeArr} 
                     ></CellFooter>
                 </div>
             )
@@ -128,6 +160,9 @@
     );
   </script>
   <style>
+    #life-game .container{
+        width: 100%;
+    }
     #life-game .btn{
       background: #222;
       color: #ddd; 
@@ -160,6 +195,9 @@
     }
     #life-game .old{
         background: #e44;
+    }
+    .clearfix {
+        clear: both;
     }
   </style>
 </html>
