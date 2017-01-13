@@ -39,20 +39,30 @@
     class CellUnit extends React.Component{
         constructor(props){
             super(props);
+            this.state = {
+                isAlive: false
+            }
+            this.toggleStatus = this.toggleStatus.bind(this);
+        }
+        toggleStatus() {
+            if(this.state.isAlive){
+                this.setState({isAlive: false});            
+            }else{
+                this.setState({isAlive: true});
+            }
         }
         render() {
-        //todo: 
-        //1. change if/else to (? : )
-        //2. add click event toggle class "alive"
+            var classes = "cell dead";
             if(this.props.isFirstInRow(this.props.cellSeq)){
-                return (
-                    <div className="cell dead clearfix" data-tr={this.props.cellSeq}></div>           
-                )            
-            }else{
-                return (
-                    <div className="cell dead" data-tr={this.props.cellSeq}></div>           
-                )
+                classes += " clearfix";
             }
+            return (
+                <div 
+                    className={classes + (this.state.isAlive ? " alive" : "")} 
+                    data-tr={this.props.cellSeq} 
+                    onClick={this.toggleStatus}>
+                </div>
+            )
         }
     }
     class CellBody extends React.Component{
