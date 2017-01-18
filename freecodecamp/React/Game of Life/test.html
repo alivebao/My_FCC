@@ -10,272 +10,131 @@
     
   <body id="life-game">
     <div class="container-fluid">      
-      <div id="game-application">
+    <div class="world-status-selector btn-group" data-toggle="buttons">
+        <label class="btn btn-default" id="btn-run">
+            <input type="radio" />Run
+        </label>
+        <label class="btn btn-default" id="btn-pause" onClick={this.props.gameStopHandler}>
+            <input type="radio" />Pause
+        </label>
+        <label class="btn btn-default" id="btn-clear">
+            <input type="radio" />Clear
+        </label>
+    </div>
+    <span>Generation: <span id="life-generation">0</span></span>
+  
+    <div id="game-application">
         
-      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="world-size-selector btn-group" data-toggle="buttons">
+        <label class="btn btn-default active" id="btn-50-30">
+            <input type="radio" />Size: 50 * 30
+        </label>
+        <label class="btn btn-default" id="btn-70-50">
+            <input type="radio" />Size: 70 * 50
+        </label>
+        <label class="btn btn-default" id="btn-100-80">
+            <input type="radio" />Size: 100 * 80
+        </label>
+    </div>
+    <div class="clearfix"></div>
+    <div class="btn-group evolve-speed-selector" data-toggle="buttons">
+        <label class="btn btn-default active" id="speed-slow" >
+            <input type="radio" />Slow
+        </label>
+        <label class="btn btn-default" id="speed-medium" >
+            <input type="radio" />Medium
+        </label>
+        <label class="btn btn-default" id="speed-fast" >
+            <input type="radio" />Fast
+        </label>
+    </div>
     </div>
   </body>
 
   <script type="text/babel">
-    class CellHeader extends React.Component{
-        constructor(props){
-            super(props);
+    var board = [];
+    var generation = 0;
+    var width;
+    var height;
+    var cells;
+    $().ready(function() {
+        setBoardSize(50, 30)
+    });
+    function setBoardSize(iwidth, iheight){
+        width = iwidth;
+        height = iheight;
+        cells = iwidth * iheight;
+        clearBoard()
+        initCells();
+        drawBoard();
+    }
+    function clearBoard() {
+        $('#game-application').empty();
+        board = [];
+        for(var i = 0 ; i < cells ; i++){
+            board[i] = {id: i, status: "cell dead"};
         }
-        render() {
-            return (
-                <div className="clearfix">
-                    <div className="world-status-selector btn-group" data-toggle="buttons">
-                        <label className="btn btn-default" id="btn-run" onClick={this.props.gameBeginHandler}>
-                            <input type="radio" />Run
-                        </label>
-                        <label className="btn btn-default" id="btn-pause" onClick={this.props.gameStopHandler}>
-                            <input type="radio" />Pause
-                        </label>
-                        <label className="btn btn-default" id="btn-clear">
-                            <input type="radio" />Clear
-                        </label>
+        generation = 0;
+        $("#game-generation").text("0");
+    }
+    function initCells() {
+        for(var i = 0 ; i < cells; i++){
+            var randomCell = Math.floor(Math.random() * 2);
+            if(randomCell === 0){
+                board[i] = {id: i, status: "cell dead"};
+            }else{
+                board[i] = {id: i, status: "cell alive"};
+            }
+        }
+        $("#btn-50-30").click(function() {
+            setBoardSize(50, 30);
+        });
+        $("#btn-70-50").click(function() {
+            setBoardSize(70, 50);
+        });
+        $("#btn-100-80").click(function() {
+            setBoardSize(100, 80);
+        });
+    }
+    function drawBoard(passedBoard) {
+        class ReactCell extends React.Component{
+            constructor(props){
+                super(props);
+            }
+            componentDidMount() {
+                $(".cell").click(function() {
+                    if($(this).hasClass("dead")){
+                        $(this).removeClass("dead");
+                        $(this).addClass("alive");
+                    }else{
+                        $(this).removeClass("alive");
+                        $(this).addClass("dead");
+                    }
+                });
+                $("#btn-clear").click(function() {
+                    clearBoard();
+                    drawBoard();
+                });
+            }
+            render() {
+                return (
+                    <div>
+                    {this.props.board.map(function(cell, i) {
+                        return <div className={cell.status + (i % width === 0 ? " clearfix" : "")} key={i} id={i}></div>                        
+                    })}
                     </div>
-                    <span>Generation: {this.props.generation}</span>
-                </div>
-            )
-        }
-    }
-    class CellUnit extends React.Component{
-        constructor(props){
-            super(props);
-            this.state = {
-                statusIndex: 0
-            }
-            this.toggleStatus = this.toggleStatus.bind(this);
-            this.updateStatus = this.updateStatus.bind(this);
-        }
-        toggleStatus() {
-            if(!this.props.isRunning){
-                if(this.state.statusIndex === 0){
-                    this.setState({statusIndex: 1});            
-                }else{
-                    this.setState({statusIndex: 0});
-                }
-            }            
-        }
-        updateStatus() {
-            if(this.props.isRunning){
-                //check if the cell need update status each period
-                if(this.props.aliveNeiNum === 2){
-                    return;
-                }else if(this.props.aliveNeiNum === 3){
-                    this.setState({statusIndex: 1});
-                }else{
-                    this.setState({statusIndex: 0});
-                }
+                )
             }
         }
-        render() {
-            var classes = "cell";
-            if(this.props.isFirstInRow(this.props.cellSeq)){
-                classes += " clearfix";
-            }
-            return (
-                <div 
-                    className={classes + (" " + this.props.cellStatus[this.state.statusIndex])} 
-                    data-tr={this.props.cellSeq} 
-                    onClick={this.toggleStatus}>
-                </div>
-            )
-        }
-    }
-    class CellBody extends React.Component{
-        constructor(props){
-            super(props);
-            this.isCellAlive = this.isCellAlive.bind(this);
-            this.getColIndex = this.getColIndex.bind(this);
-            this.getRowIndex = this.getRowIndex.bind(this);
-            this.calCellAliveNeis = this.calCellAliveNeis.bind(this);
-        }
-        isCellAlive(cellIndex){
-            return $($('#life-game .cell')[cellIndex - 1]).hasClass("alive");
-        }        
-        getRowIndex(cellIndex) {
-            //row index begin from 1
-            return parseInt((cellIndex - 1) / this.props.col + 1);
-        }
-        getColIndex(cellIndex) {
-            //col index begin from 1
-            return cellIndex - this.getRowIndex(cellIndex) * this.props.col;
-        }
-        calCellAliveNeis(cellIndex) {
-            var aliveCounts = 0;
-            //check cell's left status
-            if((this.getColIndex(cellIndex) - 1 === this.getColIndex(cellIndex - 1)) && 
-                (this.getRowIndex(cellIndex) === this.getRowIndex(cellIndex - 1)) && 
-                this.isCellAlive(cellIndex - 1)){
-                aliveCounts++;
-            }
-            //check cell's left-up status
-            if((this.getColIndex(cellIndex) - 1 === this.getColIndex(cellIndex - 1 - this.props.col)) && 
-                (this.getRowIndex(cellIndex) - 1 === this.getRowIndex(cellIndex - 1 - this.props.col)) && 
-                this.isCellAlive(cellIndex - 1 - this.props.col)){
-                aliveCounts++;
-            }
-            //check cell's top status
-            if((this.getColIndex(cellIndex) === this.getColIndex(cellIndex - this.props.col)) && 
-                (this.getRowIndex(cellIndex) - 1 === this.getRowIndex(cellIndex - this.props.col)) && 
-                this.isCellAlive(cellIndex - this.props.col)){
-                aliveCounts++;
-            }
-            //check cell's right-up status
-            if((this.getColIndex(cellIndex) + 1 === this.getColIndex(cellIndex - this.props.col + 1)) && 
-                (this.getRowIndex(cellIndex) - 1=== this.getRowIndex(cellIndex - this.props.col + 1)) && 
-                this.isCellAlive(cellIndex - this.props.col + 1)){
-                aliveCounts++;
-            }
-            //check cell's right status
-            if((this.getColIndex(cellIndex) + 1 === this.getColIndex(cellIndex + 1)) && 
-                (this.getRowIndex(cellIndex) === this.getRowIndex(cellIndex + 1)) && 
-                this.isCellAlive(cellIndex + 1)){
-                aliveCounts++;
-            }
-            //check cell's right-bottom status
-            if((this.getColIndex(cellIndex) + 1 === this.getColIndex(cellIndex + 1 + this.props.col)) && 
-                (this.getRowIndex(cellIndex) + 1 === this.getRowIndex(cellIndex + 1 + this.props.col)) && 
-                this.isCellAlive(cellIndex + 1 + this.props.col)){
-                aliveCounts++;
-            }
-            //check cell's bottom status
-            if((this.getColIndex(cellIndex) === this.getColIndex(cellIndex + this.props.col)) && 
-                (this.getRowIndex(cellIndex) + 1 === this.getRowIndex(cellIndex + this.props.col)) && 
-                this.isCellAlive(cellIndex + this.props.col)){
-                aliveCounts++;
-            }
-            //check cell's left-bottom status
-            if((this.getColIndex(cellIndex) - 1 === this.getColIndex(cellIndex - 1 + this.props.col)) && 
-                (this.getRowIndex(cellIndex) + 1 === this.getRowIndex(cellIndex - 1 + this.props.col)) && 
-                this.isCellAlive(cellIndex - 1 + this.props.col)){
-                aliveCounts++;
-            }
-            return aliveCounts;
-        }        
-        render() {
-            var gameBody = [];
-            //cellIndex begin from 1
-            for(var rowNum = 0 ; rowNum < this.props.row ; rowNum++){
-                for(var colNum = 0 ; colNum < this.props.col ; colNum++){
-                    var cellIndex = this.props.col * rowNum + colNum + 1;
-                    gameBody.push(
-                        <CellUnit 
-                        cellSeq={cellIndex} 
-                        isFirstInRow={this.props.isFirstInRow} 
-                        isRunning={this.props.runningStatue} 
-                        updateInterval={this.props.updateInterval}
-                        aliveNeiNum={this.calCellAliveNeis(cellIndex)}
-                        cellStatus={["dead", "alive"]} 
-                        ></CellUnit>
-                    );   
-                }
-            }
-            return (
-                <div>
-                    {gameBody}
-                </div>
-            )
-        }
-    }    
-    class CellFooter extends React.Component{
-        constructor(props){
-            super(props);
-        }
-        render() {
-            return(
-                <div className="clearfix">
-                    <div className="world-size-selector btn-group" data-toggle="buttons">
-                        <label className="btn btn-default active" id="btn-50-30" onClick={() => this.props.updateSize(0)}>
-                            <input type="radio" />{"Size: " + this.props.worldSizeArr[0][0] + "*" + this.props.worldSizeArr[0][1]}
-                        </label>
-                        <label className="btn btn-default" id="btn-70-50" onClick={() => this.props.updateSize(1)}>
-                            <input type="radio" />{"Size: " + this.props.worldSizeArr[1][0] + "*" + this.props.worldSizeArr[1][1]}
-                        </label>
-                        <label className="btn btn-default" id="btn-100-80" onClick={() => this.props.updateSize(2)}>
-                            <input type="radio" />{"Size: " + this.props.worldSizeArr[2][0] + "*" + this.props.worldSizeArr[2][1]}
-                        </label>
-                    </div>
-                    <div></div>
-                    <div className="btn-group evolve-speed-selector" data-toggle="buttons">
-                        <label className="btn btn-default active" id="speed-slow" onClick={() => this.props.updateSpeed(0)}>
-                         <input type="radio" />Slow
-                        </label>
-                        <label className="btn btn-default" id="speed-medium" onClick={() => this.props.updateSpeed(1)}>
-                            <input type="radio" />Medium
-                        </label>
-                        <label className="btn btn-default" id="speed-fast" onClick={() => this.props.updateSpeed(2)}>
-                            <input type="radio" />Fast
-                        </label>
-                    </div>
-                </div>
-            )
-        }
-    }
-    class CellGame extends React.Component{
-        constructor(props){
-            super(props);
-            this.state = {
-                sizeType: $('#life-game .world-size-selector .active').prevAll().length,
-                speedType: $('#life-game .evolve-speed-selector .active').prevAll().length,
-                currentGeneration: 0,
-                isRunning: false
-            }
-            this.updateSize = this.updateSize.bind(this);
-            this.updateSpeed = this.updateSpeed.bind(this);
-            this.isFirstInRow = this.isFirstInRow.bind(this);
-            this.gameBegin = this.gameBegin.bind(this);
-            this.gameStop = this.gameStop.bind(this);
-        }
-        updateSize(typeId) {
-            this.setState({
-                sizeType: typeId
-            });
-        }
-        updateSpeed(typeId) {
-            this.setState({
-                speedType: typeId
-            });
-        }
-        isFirstInRow(cellSeq){
-            return cellSeq % this.props.worldSizeArr[this.state.sizeType][1] == 1;
-        }
-        gameBegin(){
-            console.log("begin");//this.setState({isRunning: true});
-        }
-        gameStop(){
-            console.log("End");//this.setState({isRunning: false});
-        }
-        render() {
-            return (
-                <div>
-                    <CellHeader
-                        generation={this.state.currentGeneration}  
-                        gameBeginHandler={this.gameBegin} 
-                        gameStopHandler={this.gameStop} 
-                    ></CellHeader>
-                    <CellBody 
-                        row={this.props.worldSizeArr[this.state.sizeType][0]} 
-                        col={this.props.worldSizeArr[this.state.sizeType][1]} 
-                        runningStatue={this.state.isRunning} 
-                        isFirstInRow={this.isFirstInRow} 
-                        updateInterval={(3 - this.state.speedType) * 50}
-                    ></CellBody>
-                    <CellFooter 
-                        updateSize={this.updateSize} 
-                        updateSpeed={this.updateSpeed} 
-                        worldSizeArr={this.props.worldSizeArr} 
-                    ></CellFooter>
-                </div>
-            )
-        }
-    }
-    ReactDOM.render(
-        <CellGame worldSizeArr = {[[50, 30], [70, 50], [100, 80]]}></CellGame>,
-        $('#game-application')[0]
-    );
+        
+        ReactDOM.render(
+            <ReactCell board={board} generation={generation}></ReactCell>,
+            $('#game-application')[0]
+        )
+    };
+    
   </script>
   <style>
     #life-game .btn{
