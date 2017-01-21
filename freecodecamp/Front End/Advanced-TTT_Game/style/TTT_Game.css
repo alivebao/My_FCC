@@ -75,6 +75,6 @@ main .user-type {
   border: 2px solid; }
 
 .reset-game {
-  border: none; }
+  display: none; }
 
 /*# sourceMappingURL=TTT_Game.css.map */

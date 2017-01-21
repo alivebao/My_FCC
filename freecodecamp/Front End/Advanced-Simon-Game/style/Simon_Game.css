@@ -3,8 +3,15 @@
     padding: 0px;
     font-family: 'Oswald',Arial,sans;
 }
+body{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+}
 main{
     height: 100%;
+    width: 100%;
+    overflow: auto;
     background-color: wheat;
 }
 p, span, h3{

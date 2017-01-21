@@ -1,9 +1,11 @@
 <style>
 body{
     background-color: #f79f94;
+    min-width: 400px;
+    margin: 0px;
 }
 #all-content{
-    width: 30%;
+    width: 360px;
     margin: auto;
 }
 #user-menu{
@@ -100,8 +102,8 @@ body{
 <script>
 var app = angular.module('twitchApp', []);
 app.controller('myController', function($scope, $http){
-    var api = "https://wind-bow.hyperdev.space/twitch-api";
-    var cb = '?callback=JSON_CALLBACK';
+    var api = "https://api.twitch.tv/kraken";
+    var cb = '?client_id=5j0r5b7qb7kro03fvka3o8kbq262wwm&callback=JSON_CALLBACK';
     var streamers = ["freecodecamp", "GeoffStorbeck", "terakilobyte", "habathcx","notmichaelmcdonald","RobotCaleb","medrybw","comster404","brunofin","thomasballinger","joe_at_underflow","noobs2ninjas","mdwasp","beohoff","xenocomagain"];
 
     $scope.allUserArr = [];
@@ -123,7 +125,6 @@ app.controller('myController', function($scope, $http){
                 });                
             }
         })
-        
     });
 
     function updateUserList(selectedType){
@@ -135,7 +136,6 @@ app.controller('myController', function($scope, $http){
     }
     $('#user-all').click(function(){
         updateUserList('#user-all');
-        console.log("D");
    
         $scope.results = $scope.allUserArr;
         $scope.$apply();

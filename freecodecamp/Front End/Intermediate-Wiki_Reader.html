@@ -6,9 +6,13 @@ body{
     margin: 0px;
     padding: 0px;
     background-color: #092B40;
+    position: fixed;
+    height: 100%;
+    width: 100%;
 }
 main{
     height: 100%;
+    overflow: auto;
 }
 #search{
     text-align: center;
@@ -57,12 +61,8 @@ form.open:before{
     position: relative;
 }
 form.open .innerIcon{
-    animation: moveIconRight 0.25s linear 0.3s;
-    animation-fill-mode: forwards;
-}
-@keyframes moveIconRight{
-    from{left: 0px;}
-    to{left: 220px;}
+    left: 220px;
+    display: none;
 }
 form.open .innerIcon:before,
 form.open .innerIcon:after{
@@ -97,6 +97,11 @@ form.open input {
     transition-delay: 0.15s;
     position: relative;
 }
+#click-search{
+    cursor: pointer;
+    color: yellow;
+    font-size: 1.5em;
+}
 #search-result a{
     color: black;
     text-decoration: none;
@@ -104,11 +109,12 @@ form.open input {
 #search-result ul{
     list-style: none;
     margin-top: 5%;
+    padding: 0px;
 }
 #search-result li{
     background-color: white;
     padding: 10px 20px;
-    margin: 15px 80px;
+    margin: 15px 2%;
 }
 </style>
 <body>
@@ -119,7 +125,7 @@ form.open input {
                 <input type="text" ng-model="searchTxt" />
                 <div class="innerIcon"></div>
             </form>
-        <div id="reminder">Click icon to search</div>
+        <div id="reminder">Click <span id="click-search" ng-click="searchInWiki()">HERE</span> to search</div>
         </div>
         <div id="search-result">
             <ul>
@@ -148,9 +154,11 @@ app.controller('myController', function($scope, $http){
             form.removeClass('open');
             $('#reminder').show();
             $('#search').css("top", "40%");
+            $('form.open .innerIcon').css("display", "none");
             $scope.$apply();
         }else{
             form.addClass('open');
+            setTimeout(function(){ $('form.open .innerIcon').css("display", "block"); }, 1000);
             input.focus();
         }
     });
