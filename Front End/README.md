@@ -1,4 +1,4 @@
-* FreeCodeCamp项目源码(前端部分，共10个)
+* FreeCodeCamp项目源-前端部分，共10个
   * [Basic-Build a Triubute Page](https://codepen.io/19920612/full/NRvRGm/)  
     对某人进行介绍，简单的HTML/CSS  
   * [Basic-Build a Personal Portfolio](https://codepen.io/19920612/full/WGEzwr/)  
