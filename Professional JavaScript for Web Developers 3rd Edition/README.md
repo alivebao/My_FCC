@@ -1,1 +1,0 @@
-Based on &lt;&lt;Professional JavaScript for Web Developers 3rd Edition>>
