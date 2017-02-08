@@ -58,7 +58,7 @@ $().ready(function() {
             .call(yAxis)
             .append('text')
             .attr('font-weight', 'bold')
-            .text('Order');
+            .text('Ranking');
             
         svg.append("g")
             .attr("class", "axis")
@@ -67,7 +67,12 @@ $().ready(function() {
             .append('text')
             .attr("transform","translate(" + (width - chartMargin.left) + ", 0)")
             .attr('font-weight', 'bold')
-            .text('Record/min');
+            .text('Time');
+            
+        let reminderCard = d3.select(".card")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);    
             
         let rects = svg.selectAll("circle")
             .data(result)
@@ -83,5 +88,23 @@ $().ready(function() {
                 return yScale(result.length - i);
             })
             .attr("r", 5)
+            .on("mouseover", function(d) {
+                reminderCard.transition()
+                    .duration(200)
+                    .style("opacity", 0.9);
+                reminderCard.html("<p>" 
+                            + d.Nationality + ":" + d.Name + "</br>"
+                            + "Place:" + d.Place + ",Time:" + d.Time + "</br>"
+                            + d.Doping +
+                "</p>")
+                    .style("left", (chartMargin.left + 200) + "px")
+                    .style("top", (chartMargin.top + height / 5) + "px")
+                    .style("width", width / 3);
+            })
+            .on("mouseout", function() {
+                reminderCard.transition()
+                  .duration(500)
+                  .style("opacity", 0);
+            });
     })
 });

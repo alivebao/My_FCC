@@ -1,5 +1,5 @@
 ## Source Code of FreeCodeCamp Projects
-1. Front End(10)
+1. Front End Projects(10)
   * [Basic-Build a Triubute Page](https://codepen.io/19920612/full/NRvRGm/)  
     Introduction of someone, simple application of HTML/CSS
   * [Basic-Build a Personal Portfolio](https://codepen.io/19920612/full/WGEzwr/)  
@@ -20,3 +20,11 @@
     Just implement the simple UI and winning logic, you can get full implement ion Advanced-TTT_Game-Ref.html
   * [Advanced-Build a Simon Game](https://codepen.io/19920612/full/woqpmg/)  
     Simon Game, remember the random created by system complete game
+2. React Projects(5)
+  * [Build a Markdown Preview](https://codepen.io/19920612/full/eBPdWy)
+  * [Build a Camper Leaderboard](https://codepen.io/19920612/full/dOBxXB)
+  * [Build a Recipe Box](https://codepen.io/19920612/full/GrgQmJ)
+3. Data Visualization Projects(5)    
+  * [Visualize Data With a Bar Chart](https://codepen.io/19920612/full/LxmjLd/)
+  * [Visualize Data With a Scatterplot Chart](http://codepen.io/19920612/full/RKYBPX/)
+    
