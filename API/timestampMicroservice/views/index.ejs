@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <p>Example usage:</p>
+    <div class="code">
+      <p>http://localhost:3000/December%2015,%202015</p>
+      <p>http://localhost:3000/1450137600</p>
+    </div>
+    
+    <p>Example output:</p>
+    <div>
+      <p class="code">{ "unix": 1450137600, "natural": "December 15, 2015" }</p>
+    </div>
+  </body>
+  <style>
+    .code{
+        padding: 2px 4px;
+        font-size: 90%;
+        color: #c7254e;
+        background-color: #f9f2f4;
+        border-radius: 4px;
+    }
+  </style>
+</html>
