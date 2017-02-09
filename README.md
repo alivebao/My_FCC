@@ -27,4 +27,7 @@
 3. Data Visualization Projects(5)    
   * [Visualize Data With a Bar Chart](https://codepen.io/19920612/full/LxmjLd/)
   * [Visualize Data With a Scatterplot Chart](http://codepen.io/19920612/full/RKYBPX/)
+3. API Projects(5)    
+  * [Timestamp Microservice](https://github.com/alivebao/FreeCodeCamp/tree/master/API/timestampMicroservice)
+  * [Request Header Parser Microservice](https://github.com/alivebao/FreeCodeCamp/tree/master/API/requesterHeaderParserMic)
     
