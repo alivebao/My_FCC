@@ -31,5 +31,6 @@
   * [Timestamp Microservice](https://mictimestamp.herokuapp.com/)
   * [Request Header Parser Microservice](https://micrequestheaderparser.herokuapp.com/)
   * [URL Shortener Microservice](https://micshortenerurl.herokuapp.com/)
+  * [Image Search Abstraction Layer](https://micimagesearch.herokuapp.com/)
   * [File Metadata Microservice](https://micgetfilesize.herokuapp.com/)
     
