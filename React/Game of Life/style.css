@@ -1,0 +1,31 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+#game-header{
+    color: #ddd;
+    text-align: center;
+    background-color: #333;
+    height: 40px;
+    padding: 5px;
+    font-size: 30px;
+    font-family: Courier New, Courier, monospace;
+}
+.game-button{
+    width: 100px;
+    height: 30px;
+    margin: 4px 8px 0 8px;
+    float: left;
+    font-size: 20px;
+    border-radius: 5px;
+    background: #222;
+    color: #ddd;
+    cursor: pointer;
+}
+.game-button.longer-button{
+    width: 140px;
+}
+.game-button.activeButton{
+    background: #faa;
+    color: #222;
+}
