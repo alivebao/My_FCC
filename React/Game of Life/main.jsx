@@ -95,35 +95,27 @@ class GameWrapper extends React.Component{
 
     let initWidth = 50;
     let initHeight = 30;
-    let arr = [];
-    for(let i = 0 ; i < initWidth * initHeight; i ++){
-      arr[i] = {id: i, status: "cell dead"};
-    }
     
     this.state = {
       width: initWidth,
       height: initHeight,
-      cells: arr
     }
     this.updateBoardSize = this.updateBoardSize.bind(this);
   }
 
   updateBoardSize(boardSize){
     if(boardSize == SMALL){
-      this.setState({width: 50});
-      this.setState({height: 30});
+      this.setState({width: 50, height: 30});
     }else if(boardSize == MIDDLE){
-      this.setState({width: 70});
-      this.setState({height: 50});
+      this.setState({width: 70, height:  50});
     }else if(boardSize == LARGE){
-      this.setState({width: 100});
-      this.setState({height: 80});
+      this.setState({width: 100, height: 80});
     }    
   }
 
   render() {
     let totals = this.state.width * this.state.height;
-    let arr = [];
+    let arrCells = [];
     for(let i = 0 ; i < totals ; i++){
       arrCells[i] = {id: i, status: "cell dead"}
     }
