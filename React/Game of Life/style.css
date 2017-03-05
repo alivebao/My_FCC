@@ -32,12 +32,19 @@
 
 .cell{
     font-size: 9px;
-    width: 11px;
-    height: 11px;
+    width: 8px;
+    height: 8px;
     border-top: 1px solid #333;
     border-left: 1px solid #222;
     margin: 0px;
     float: left;
+    background-color: #fbb;
+    cursor: pointer;
+}
+.cell:hover{
+    border: 1px solid red;
+    border-bottom: 0px;
+    border-right: 0px;
 }
 .cell.dead{
     background: black;
