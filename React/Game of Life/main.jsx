@@ -3,189 +3,168 @@ import $ from 'jquery'
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const START = 1;
-const PAUSING = 0;
-const STOP = -1;
-
 const SMALL = 0;
 const MIDDLE = 1;
 const LARGE = 2;
+const SLOW = 3;
+const FAST = 4;
+const START = 5;
+const PAUSE = 6;
+const STOP = 7;
 
-let gameSpeed = 300;
+let interalTime = 300;
 
-let gameStatus = PAUSING;
+class Game extends React.Component{
+  constructor(props){
+    super(props);
 
-function setGameStatus(param, ele){
-  gameStatus = param;
-  btnClickSlip(ele.target);
-  if(gameStatus == STOP){
-    $('.cell').addClass('dead')
+    this.state = {
+      width: 50,
+      height: 30,
+      gen: 0,
+      interalTime: 200,
+      gameStatus: START,
+      cells: []
+    }
+
+    for(var i = 0 ; i < this.state.height ; i++){
+      this.state.cells[i] = [];
+      for(var j = 0 ; j < this.state.width ; j++){
+        this.state.cells[i][j] = Math.random() > .7;
+      }
+    }
+
+    this.calNextStatus = this.calNextStatus.bind(this);
+    setInterval(this.calNextStatus, this.state.interalTime);
   }
-}
 
-function aliveorDead(ele){
- if(Math.random() > 0.3){
-    $(ele).addClass("dead");
-  }else{
-    $(ele).removeClass("dead");
-  }
-}
-function btnClickSlip(ele){
-  let jqObj = $(ele);
-  jqObj.addClass("activeButton");
-
-  function removeActiveStatue(){
-    jqObj.removeClass("activeButton");
-  }
-  setTimeout(removeActiveStatue, 100);
-}
-
-$().ready(function() {
-  $('.cell').click(function() {
-    $(this).toggleClass("dead")
-  });
-
-  function checkStatus() {
-    if(gameStatus !== START){
+  calNextStatus(){
+    if(this.state.gameStatus != START){
       return;
-    }else{
-      setTimeout(calAllCells, gameSpeed);
-    }    
+    }
+    var oriArr = this.state.cells;
+    var nextArr = oriArr;
+
+    for(var i = 0; i < this.state.height; i++){
+      for(var j = 0; j < this.state.width; j++){
+        var count = 0;
+        oriArr[i][j] ? count++ : "";
+        if(i - 1 >= 0){
+          if(j - 1 >= 0){
+            oriArr[i - 1][j - 1] ? count++ : "";
+          }
+
+          oriArr[i - 1][j] ? count++ : "";
+
+          if(j + 1 <= this.state.width){
+            oriArr[i - 1][j + 1] ? count++ : "";
+          }
+        }
+
+        if(j - 1 >= 0){
+          oriArr[i][j - 1] ? count++ : "";
+        }
+
+        if(j + 1 < this.state.width){
+          oriArr[i][j + 1] ? count++ : "";
+        }
+
+        if(i + 1 < this.state.height){
+          if(j - 1 >= 0){
+            oriArr[i + 1][j - 1] ? count++ : "";
+          }
+
+          oriArr[i + 1][j] ? count++ : "";
+
+          if(j + 1 <= this.state.width){
+            oriArr[i + 1][j + 1] ? count++ : "";
+          }
+        }
+        nextArr[i][j] = count >= 3 & Math.random() > 0.3 ? true : false;
+      }
+    }
+    var curGen = this.state.gen;
+    this.setState({
+      gen: ++curGen,
+      cells: nextArr
+    });
   }
-  function calAllCells(){
-    var iLength = $('.cell').length;  
-    for(var i = 0 ; i < iLength ; i++){
-      aliveorDead($('.cell')[i]);
+
+  updateInterval(param){
+    switch(param){
+      case SLOW:
+        this.setState({interalTime: 500});
+        break;
+      case MIDDLE:
+        this.setState({interalTime: 300});
+        break;
+      case FAST:
+        this.setState({interalTime: 150});
+        break;
     }
   }
-  setInterval(checkStatus, 500)  
-});
 
-class GameHeader extends React.Component{
-  render() {
-    return (
-      <div id="game-header">
-        <p>ReactJS Game of Life</p>
-      </div>
-    );
+  updateGameState(param){
+    if(param == STOP){
+      var arr = [];
+      for(var i = 0 ; i < this.state.height ; i++){
+        arr[i] = [];
+        for(var j = 0 ; j < this.state.width ; j++){
+          arr[i][j] = false;
+        }
+      }
+      this.setState({cells: arr});
+    }
+    this.setState({gameStatus: param});
   }
-}
 
-class GameButton extends React.Component{  
-  render() {
-    return (
-      <div>
-        <button className={"game-button" + (this.props.isLongerBtn === true ? " longer-button" : "")} 
-          onClick={this.props.handler}>
-          {this.props.name}
-        </button>
-      </div>
-    );
+  toggleCellState(e){
+    var i = parseInt(e.target.id);
+    var iX = Math.floor(i / this.state.width);
+    var iY = i % this.state.width;
+    var arr = this.state.cells;
+    arr[iX][iY] = !this.state.cells[iX][iY];
+    this.setState({cells: (arr)});
   }
-}
+  render(){
+    return (
+      <div className = "game-container">
+        <h1>Game of Life</h1>
+        <h4>Generation: {this.state.gen}</h4>
 
-class GameControlBtnGroup extends React.Component{
-  render() {
-    let runBtn = React.createElement(GameButton, {"name":"Run", "handler": (e) => setGameStatus(START, e), "isLongerBtn": false});
-    let pauseBtn = React.createElement(GameButton, {"name":"Pause", "handler": (e) => setGameStatus(PAUSING, e), "isLongerBtn": false});
-    let clearBtn = React.createElement(GameButton, {"name":"Clear", "handler": (e) => setGameStatus(STOP, e), "isLongerBtn": false});
-    return (
-      <div id="game-control-btn-group">
-        {runBtn}
-        {pauseBtn}
-        {clearBtn}
-      </div>
-    );
-  }
-}
+        <div> 
+          <div className = "button-group">
+              <button className = "btn btn-status-control" onClick={this.updateGameState.bind(this, START)}>Start</button>
+              <button className = "btn btn-status-control" onClick={this.updateGameState.bind(this, PAUSE)}>Pause</button>
+              <button className = "btn btn-status-control" onClick={this.updateGameState.bind(this, STOP)}>Clear</button>
+          </div>
+        </div>
 
-class GameBoardSetBtnGroup extends React.Component{
-  constructor(props){
-    super(props);
-  }
-  render() {
-    let smallSizeBtn = React.createElement(GameButton, {"name":"Size: 50 x 30", "handler": (e) => this.props.handler(SMALL), "isLongerBtn": true});
-    let middleSizeBtn = React.createElement(GameButton, {"name":"Size: 70 x 50", "handler": (e) => this.props.handler(MIDDLE), "isLongerBtn": true});
-    let LargeSizeBtn = React.createElement(GameButton, {"name":"Size: 100 x 80", "handler": (e) => this.props.handler(LARGE), "isLongerBtn": true});
-    return (
-      <div id="game-boardsize-btn-group">
-        {smallSizeBtn}
-        {middleSizeBtn}
-        {LargeSizeBtn}
-      </div>
-    );
-  }
-}
+        <div className = "game-body">
+        {
+          this.state.cells.map((row, i) =>
+                <div  key={i} className="game-row">
+                {
+                  row.map((col, j) => <div onClick={this.toggleCellState.bind(this)} key={j} className={'cell ' + (this.state.cells[i][j] ? '' : 'dead')} id={i * this.state.width + j}></div>
+                )}
+                </div>
+          )
+        }
+        </div>
 
-class GameBody extends React.Component{
-  constructor(props){
-    super(props);
-  }
-  render() {
-    return (
-      <div id="game-body">
-        <div id="game-panel">
-          {
-            this.props.cells.map(function(ele, i) {
-              return React.createElement("div", { className: ele.status, key: i , id: i});
-            })
-          }
+        <div>
+          <div className = "button-group">
+            <button className = "btn btn-speed-control" onClick={this.updateInterval.bind(this, SLOW)}>Slow</button>
+            <button className = "btn btn-speed-control" onClick={this.updateInterval.bind(this, MIDDLE)}>Middle</button>
+            <button className = "btn btn-speed-control" onClick={this.updateInterval.bind(this, FAST)}>Fast</button>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-class GameWrapper extends React.Component{
-  constructor(props){
-    super(props);
-
-    let initWidth = 50;
-    let initHeight = 30;
-    
-    this.state = {
-      width: initWidth,
-      height: initHeight,
-      boardSize: SMALL
-    }
-    this.updateBoardSize = this.updateBoardSize.bind(this);
-  }
-
-  updateBoardSize(boardSize){
-    if(boardSize !== this.state.boardSize){
-      if(boardSize == SMALL){
-        this.setState({width: 50, height: 30, boardSize: SMALL});
-      }else if(boardSize == MIDDLE){
-        this.setState({width: 70, height:  50, boardSize: MIDDLE});
-        ;
-      }else if(boardSize == LARGE){
-        this.setState({width: 100, height: 80, boardSize: LARGE});
-      }    
-    }    
-  }
-
-  render() {
-    let totals = this.state.width * this.state.height;
-    let arrCells = [];
-    for(let i = 0 ; i < totals ; i++){
-      arrCells[i] = {id: i, status: "cell" + (Math.random() < 0.7 ? " dead" : "") + (i % this.state.width == 0 ? " clear-all" : "")}
-    }
-    return (
-      <div className="game-wrapper">
-        <GameHeader></GameHeader>
-        <GameControlBtnGroup></GameControlBtnGroup>
-
-        <div className="clear-all"></div>
-        <GameBody cells = {arrCells}></GameBody>
-        <div className="clear-all"></div>
-
-        <GameBoardSetBtnGroup handler={this.updateBoardSize}></GameBoardSetBtnGroup>
-      </div>
-    );
-  }
-}
-
 ReactDOM.render(
-  <GameWrapper></GameWrapper>,
+  <Game></Game>,
   document.querySelector('#wrapper')
 );
