@@ -24,6 +24,7 @@
   * [Build a Markdown Preview](https://codepen.io/19920612/full/eBPdWy)
   * [Build a Camper Leaderboard](https://codepen.io/19920612/full/dOBxXB)
   * [Build a Recipe Box](https://codepen.io/19920612/full/GrgQmJ)
+  * [Build the Game of Life](http://codepen.io/19920612/full/oZYKOY/)
 3. Data Visualization Projects(5)    
   * [Visualize Data With a Bar Chart](https://codepen.io/19920612/full/LxmjLd/)
   * [Visualize Data With a Scatterplot Chart](http://codepen.io/19920612/full/RKYBPX/)
