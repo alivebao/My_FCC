@@ -1,0 +1,274 @@
+<html>
+    <body>
+      <div id="wrapper"></div>
+    </body>
+  
+    <script src="../script/react.js"></script>
+	<script src="../script/react-dom.js"></script>
+	<script src="../script/browser.min.js"></script>
+	<script type="text/babel">
+	var SMALL = 0;
+	var MIDDLE = 1;
+	var LARGE = 2;
+	var SLOW = 3;
+	var FAST = 4;
+	var START = 5;
+	var PAUSE = 6;
+	var STOP = 7;
+
+	var initLiveRate = 0.9;
+
+	class Game extends React.Component{
+	  constructor(props){
+		super(props);
+
+		this.state = {
+		  width: 50,
+		  height: 30,
+		  gen: 0,
+		  interalTime: 20,
+		  gameStatus: START,
+		  cells: [],
+		  timerId : 0
+		}
+
+		for(var i = 0 ; i < 30 ; i++){
+		  this.state.cells[i] = [];
+		  for(var j = 0 ; j < 50 ; j++){
+			this.state.cells[i][j] = Math.random() > initLiveRate;
+		  }
+		}
+
+		this.calNextStatus = this.calNextStatus.bind(this);
+		var id = setInterval(this.calNextStatus, this.state.interalTime);
+		this.state.timerId = id;
+	  }
+
+	  calNextStatus(){
+		if(this.state.gameStatus != START){
+		  return;
+		}
+		var oriArr = this.state.cells;
+		var nextArr = oriArr;
+
+		for(var i = 0; i < this.state.height; i++){
+		  for(var j = 0; j < this.state.width; j++){
+			var count = 0;
+			if(i - 1 >= 0){
+			  if(j - 1 >= 0){
+				oriArr[i - 1][j - 1] ? count++ : "";
+			  }
+
+			  oriArr[i - 1][j] ? count++ : "";
+
+			  if(j + 1 <= this.state.width){
+				oriArr[i - 1][j + 1] ? count++ : "";
+			  }
+			}
+
+			if(j - 1 >= 0){
+			  oriArr[i][j - 1] ? count++ : "";
+			}
+
+			if(j + 1 < this.state.width){
+			  oriArr[i][j + 1] ? count++ : "";
+			}
+
+			if(i + 1 < this.state.height){
+			  if(j - 1 >= 0){
+				oriArr[i + 1][j - 1] ? count++ : "";
+			  }
+
+			  oriArr[i + 1][j] ? count++ : "";
+
+			  if(j + 1 <= this.state.width){
+				oriArr[i + 1][j + 1] ? count++ : "";
+			  }
+			}
+			if(oriArr[i][j]){
+			  nextArr[i][j] = (count < 2 || count > 3) ? false : true;
+			}else{
+			  nextArr[i][j] = (count == 3);
+			}
+		  }
+		}
+		var curGen = this.state.gen;
+		this.setState({
+		  gen: ++curGen,
+		  cells: nextArr
+		});
+	  }
+
+	  updateInterval(param){
+		clearInterval(this.state.timerId);
+		switch(param){
+		  case SLOW:        
+			this.setState({timerId: setInterval(this.calNextStatus, 600)});
+			break;
+		  case MIDDLE:
+			this.setState({timerId: setInterval(this.calNextStatus, 300)});
+			break;
+		  case FAST:
+			this.setState({timerId: setInterval(this.calNextStatus, 20)});
+			break;
+		}
+	  }
+
+	  updateSize(param){
+		var tempArr = [];
+		var a = 50, b = 30;
+		if(param == MIDDLE){
+		  a = 70;
+		  b = 50;
+		}
+		if(param == LARGE){
+		  a = 100;
+		  b = 80;
+		}
+		for(var i = 0 ; i < b ; i++){
+		  tempArr[i] = [];
+		  for(var j = 0 ; j < a ; j++){
+			tempArr[i][j] = Math.random() > initLiveRate;
+		  }
+		}
+		this.setState({cells: tempArr, width: a, height: b});
+	  }
+
+	  updateGameState(param){
+		if(param == STOP){
+		  var arr = [];
+		  for(var i = 0 ; i < this.state.height ; i++){
+			arr[i] = [];
+			for(var j = 0 ; j < this.state.width ; j++){
+			  arr[i][j] = false;
+			}
+		  }
+		  this.setState({cells: arr});
+		}
+		this.setState({gameStatus: param});
+	  }
+
+	  toggleCellState(e){
+		var i = parseInt(e.target.id);
+		var iX = Math.floor(i / this.state.width);
+		var iY = i % this.state.width;
+		var arr = this.state.cells;
+		arr[iX][iY] = !this.state.cells[iX][iY];
+		this.setState({cells: (arr)});
+	  }
+	  render(){
+			return (
+				<div className = "game-container">
+				<h1 id="game-header">Game of Life</h1>
+				<h4 className="white-text">Game Generation: {this.state.gen}</h4>
+
+				<div> 
+					<div className = "button-group">
+						<p className="white-text">Game State Controller</p>
+						<button className = "btn btn-status-control game-button" onClick={this.updateGameState.bind(this, START)}>Start</button>
+						<button className = "btn btn-status-control game-button" onClick={this.updateGameState.bind(this, PAUSE)}>Pause</button>
+						<button className = "btn btn-status-control game-button" onClick={this.updateGameState.bind(this, STOP)}>Clear</button>
+					</div>
+				</div>
+
+				<div className = "clear-all">
+				{
+					this.state.cells.map((row, i) =>
+						<div  key={i} className="game-row">
+						{
+							row.map((col, j) => <div onClick={this.toggleCellState.bind(this)} key={j} className={'cell ' + (this.state.cells[i][j] ? '' : 'dead')} id={i * this.state.width + j}></div>
+						)}
+						</div>
+					)
+				}
+				</div>
+
+				<div>
+					<div className = "button-group">
+					<p className="white-text">Game Speed Controller</p>
+					<button className = "btn btn-speed-control game-button" onClick={this.updateInterval.bind(this, SLOW)}>Slow</button>
+					<button className = "btn btn-speed-control game-button" onClick={this.updateInterval.bind(this, MIDDLE)}>Middle</button>
+					<button className = "btn btn-speed-control game-button" onClick={this.updateInterval.bind(this, FAST)}>Fast</button>
+					</div>
+
+					<div className = "button-group">
+					<p className="white-text">Board Size Controller</p>
+					<button className = "btn btn-size-control game-button" onClick={this.updateSize.bind(this, SMALL)}>SMALL</button>
+					<button className = "btn btn-size-control game-button" onClick={this.updateSize.bind(this, MIDDLE)}>Middle</button>
+					<button className = "btn btn-size-control game-button" onClick={this.updateSize.bind(this, LARGE)}>LARGE</button>
+					</div>
+				</div>
+				</div>
+			);
+	  }
+	}
+
+	ReactDOM.render(
+	  <Game></Game>,
+	  document.getElementById('wrapper')
+	);
+	</script>
+	<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	body{
+		background-image: radial-gradient(#cc4444, #111111);
+		text-align: center;
+	}
+
+	.white-text{
+		color: white;
+	}
+	#game-header{
+		color: #ddd;
+		text-align: center;
+		background-color: #333;
+		height: 40px;
+		padding: 5px;
+		font-size: 30px;
+		font-family: Courier New, Courier, monospace;
+	}
+	.game-button{
+		width: 100px;
+		height: 30px;
+		margin: 5px;
+		font-size: 20px;
+		border-radius: 5px;
+		background: #222;
+		color: #ddd;
+		cursor: pointer;
+	}
+
+	.cell.dead{
+		background: black;
+	}
+
+	.clear-all{
+		clear: both;
+	}
+
+	.cell{
+		font-size: 9px;
+		width: 8px;
+		height: 8px;
+		border-top: 1px solid #333;
+		border-left: 1px solid #222;
+		margin: 0px;
+		display: inline-block;
+		background-color: #fbb;
+		cursor: pointer;
+	}
+	.game-row{
+		height: 8px;
+	}
+	.button-group{
+		border: 1px solid grey;
+		display: inline-block;
+		margin: 10px;
+		padding: 10px;
+		border-radius: 20px;
+	}
+	</style>
+</html>
