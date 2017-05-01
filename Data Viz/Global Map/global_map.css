@@ -1,0 +1,26 @@
+body{
+  margin: 0px;
+  padding: 0px;
+  background: gray;
+  text-align: center;
+}
+
+#container{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.tooltip {
+  font-family: 'Lato', 'Arial', sans-serif;
+  position: absolute;
+  text-align: left;
+  width: auto;
+  height: auto;
+  padding: 20px;
+  font: 1em;
+  background: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  line-height: 1.5em;
+}

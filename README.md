@@ -21,6 +21,7 @@
   * [Visualize Data With a Scatterplot Chart](http://codepen.io/19920612/full/RKYBPX/)
   * [Visualize Data with a Heat Map](https://codepen.io/19920612/full/YVpMrL/)
   * [Show National Contiguity with a Force Directed Graph Complete](https://codepen.io/19920612/full/dWNgWQ/)
+  * [Map Data Across the Globe](https://codepen.io/19920612/full/OmmoWx/)
 4. API Projects(5)    
   * [Timestamp Microservice](https://mictimestamp.herokuapp.com/)
   * [Request Header Parser Microservice](https://micrequestheaderparser.herokuapp.com/)

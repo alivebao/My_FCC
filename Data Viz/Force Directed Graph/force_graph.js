@@ -63,11 +63,9 @@ $().ready(function(){
           .attr("y1",function(d){ return d.source.y; })
           .attr("x2",function(d){ return d.target.x; })
           .attr("y2",function(d){ return d.target.y; });
-
       //更新节点坐标
       svg_nodes.attr("cx",function(d){ return d.x; })
           .attr("cy",function(d){ return d.y; });
-
       //更新文字坐标
       svg_texts.attr("x", function(d){ return d.x; })
          .attr("y", function(d){ return d.y; });
